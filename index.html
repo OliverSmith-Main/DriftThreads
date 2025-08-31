@@ -10,6 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+  <link rel="stylesheet" href="css/scrollToTop.css">
+
 
   <style>
     :root {
@@ -139,6 +141,17 @@
     .cat-btn { padding: 6px 12px; border-radius: 10px; background: #222; color: #aaa; cursor: pointer; font-size: 14px; border: none; }
     .cat-btn.active { background: #0066ff; color: #fff; }
 
+    .cart-header .sub{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .whatsapp-link {
+      color: rgb(4, 202, 4);
+      text-decoration: none;
+    }
+
+
     /* Main Grid */
     main { flex: 1; padding: 20px 12px; }
     #grid {
@@ -233,6 +246,9 @@
     <div class="cart-content">
       <button id="closeCart"><i class="fas fa-times"></i></button>
       <h2>Your Cart</h2>
+      <div class="sub">Screenshot this cart, and <a class="whatsapp-link" id="waLink" href="https://wa.me/+27713468567" target="_blank">message +27 67 534 2232</a> to place your order.</div>
+    
+
       <div class="cart-items" id="cartItems"></div>
       <div class="cart-footer">
         <button id="clearCartBtn"><i class="fas fa-trash"></i> Clear</button>
