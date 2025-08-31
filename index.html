@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>DriftThreads — flip fix</title>
+  <title>DriftThreads — Home</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="icon" href="assets/favicon.png" />
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
@@ -123,9 +123,76 @@
 
     #loadingSpinner{text-align:center;padding:18px 0;color:#99bfe8}
     :focus-visible{outline:3px solid rgba(0,102,255,0.12);outline-offset:3px;border-radius:8px}
+  
+/* Preloader container */
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #111; /* or any bg */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+  transition: opacity 0.6s ease; /* fade effect */
+}
+
+/* Spinner */
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #555;
+  border-top: 5px solid var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Hidden state */
+#preloader.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+  
+  
   </style>
 </head>
 <body>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+  const preloader = document.getElementById("preloader");
+
+  // Always stay at least 2s
+  const minTime = 2000;
+  const start = Date.now();
+
+  window.addEventListener("load", () => {
+    const elapsed = Date.now() - start;
+    const remaining = Math.max(0, minTime - elapsed);
+
+    setTimeout(() => {
+      preloader.classList.add("hidden");
+      setTimeout(() => preloader.remove(), 600); // remove after fade
+    }, remaining);
+  });
+});
+
+</script>
+
+
+  <div id="preloader">
+  <div class="loader"></div>
+</div>
+
+
 
   <!-- toast -->
   <div id="addNotif" class="add-notif" role="status" aria-live="polite" aria-atomic="true">
