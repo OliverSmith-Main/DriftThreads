@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DriftThreads - Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+
+  <!-- Style -->
+  <link rel="stylesheet" href="css/scrollToTop.css">
+
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --card-bg: #1a1a1a;
+      --text: #fff;
+      --accent: #0af;
+      --muted: #9aa0a6;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; width: 100%; overflow-x: hidden; }
+    body {
+      font-family: 'Lexend', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    /* Header */
+    header {
+      padding: 12px 16px;
+      background: #161616;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .top-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo img {
+      height: 40px;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Search */
+    .search-wrap { flex: 1; display: flex; gap: 6px; }
+    .search-box { position: relative; flex: 1; min-width: 0; }
+    .search-box input {
+      width: 100%;
+      padding: 10px 32px 10px 12px;
+      border: none;
+      border-radius: 8px;
+      background: #222;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    #clearBtn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      display: none;
+    }
+
+    #searchBtn {
+      background: #0066ff;
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* Cart button */
+    #cartBtn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 50%;
+      background: #222;
+      width: 40px;
+      height: 40px;
+      flex: 0 0 auto;
+    }
+
+    #cartBtn i { font-size: 18px; }
+
+    #cartCount {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      background: #0066ff;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 11px;
+      min-width: 16px;
+      height: 16px;
+      line-height: 16px;
+      text-align: center;
+      font-weight: 700;
+      padding: 0 4px;
+    }
+
+    /* Categories */
+    .cat-bar { display: flex; gap: 8px; flex-wrap: wrap; }
+    .cat-btn {
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: #222;
+      color: #aaa;
+      cursor: pointer;
+      font-size: 14px;
+      border: none;
+    }
+
+    .cat-btn.active {
+      background: #0066ff;
+      color: #fff;
+    }
+
+    /* Main Grid */
+    main { flex: 1; padding: 20px 12px; }
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 220px);
+      justify-content: center;
+      gap: 20px;
+      max-width: calc(220px*5 + 20px*4);
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    @media(max-width:600px) { #grid { grid-template-columns: repeat(2, 1fr); max-width: 100%; } }
+
+    /* Cards */
+    .card {
+      perspective: 1000px;
+      max-width: 220px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 320px;
+      transform-style: preserve-3d;
+      transition: transform .5s;
+      border-radius: 12px;
+    }
+
+    .card.flipped .card-inner { transform: rotateY(180deg); }
+
+    .card-front, .card-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      background: var(--card-bg);
+      backface-visibility: hidden;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .img-wrap { height: 62%; background: #fff; display: flex; align-items: center; justify-content: center; }
+    .img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+    .front-body {
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .product-title-front { font-weight: 600; font-size: 0.95rem; }
+
+    .price-row { display: flex; justify-content: space-between; align-items: center; }
+    .price { font-weight: 700; font-size: 1.05rem; }
+    .add-btn {
+      background: #0066ff;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      padding: 14px;
+      font-size: 0.95rem;
+    }
+
+    .card-back h3 { margin: 0 0 6px; font-size: 1.05rem; }
+    .card-back p { margin: 0 0 12px; color: var(--muted); }
+
+    .view-img-btn {
+      background: #94f3a2;
+      color: #012;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .empty-state {
+      grid-column: 1/-1;
+      padding: 28px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      text-align: center;
+      color: #aaa;
+    }
+
+    /* Cart Modal */
+    .cart-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .cart-modal.active { display: flex; }
+
+    .cart-content {
+      position: relative;
+      background: #1a1a1a;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 560px;
+      max-height: 80vh;
+      overflow: auto;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cart-items { display: flex; flex-direction: column; gap: 10px; }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #222;
+      padding: 8px;
+      border-radius: 8px;
+    }
+
+    .cart-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; }
+    .remove-btn { background: #ff2a2a; color: #fff; border: none; cursor: pointer; padding: 6px 8px; border-radius: 8px; }
+
+    .cart-footer {
+      border-top: 1px solid #333;
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #clearCartBtn {
+      background: #ff2a2a;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    #closeCart {
+      position: absolute;
+      top: 36px;
+      right: 20px;
+      background: #0066ff;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    #closeCart i { font-size: 14px; }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+
+    .lightbox.active { display: flex; }
+
+    .lightbox img { max-width: 95%; max-height: 85%; border-radius: 8px; }
+
+    .lightbox .close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Scroll to Top Button  -->
+  <a id="scrollToTopBtn" href="#"><i class="fas fa-angle-up"></i></a>
+
+  <header>
+    <div class="top-row">
+      <div class="logo"><img src="assets/favicon.png" alt="logo"></div>
+      <div class="search-wrap">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search products..." style="border-radius: 25px 5px 5px 25px;">
+          <button id="clearBtn"><i class="fas fa-times"></i></button>
+        </div>
+        <button id="searchBtn" style="border-radius: 5px 25px 25px 5px;"><i class="fas fa-search"></i></button>
+      </div>
+      <div id="cartBtn" role="button" tabindex="0" aria-label="Shopping cart">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cartCount">0</span>
+      </div>
+    </div>
+    <div class="cat-bar">
+      <div class="cat-btn active" data-cat="all">All</div>
+      <div class="cat-btn" data-cat="hoodies">Hoodies</div>
+      <div class="cat-btn" data-cat="supplements">Supplements</div>
+      <div class="cat-btn" data-cat="other">Other</div>
+    </div>
+  </header>
+
+  <main>
+    <section id="grid"></section>
+  </main>
+
+  <div class="cart-modal" id="cartModal" aria-hidden="true">
+    <div class="cart-content">
+      <button id="closeCart"><i class="fas fa-times"></i></button>
+      <h2>Your Cart</h2>
+      <div class="cart-items" id="cartItems"></div>
+      <div class="cart-footer">
+        <button id="clearCartBtn"><i class="fas fa-trash"></i> Clear</button>
+        <div><strong>Total:</strong> <span id="cartTotal">R0.00</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lightbox" id="imgLightbox">
+    <button class="close" id="closeLightbox"><i class="fas fa-times"></i></button>
+    <img id="lightboxImg" src="" alt="">
+  </div>
+
+  <script>
+    const products = [
+      {id: 1, title: 'Kakashi Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/kakashi.jpeg', description: "Premium cotton-blend hoodie featuring Kakashi's fanart" },
+      {id: 2, title: 'BMW Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/bmw.jpeg', description: 'Classic "I need Money for BMW" hoodie' },
+      {id: 3, title: '911 GT3 RS Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/911_gt3_rs.jpeg', description: 'Sleek hoodie with the Porsche 911 GT3 RS' },
+      {id: 4, title: 'BMW M Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/bmw_m.jpeg', description: 'Stylish BMW M series inspired hoodie' },
+      {id: 5, title: 'Monkey D. Luffy Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/monkey_d_luffy.jpeg', description: 'One Piece fan favorite hoodie with Luffy print' },
+      {id: 6, title: 'Tokyo Ghoul Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/tokyo_ghoul.jpeg', description: 'Dark and edgy Tokyo Ghoul themed hoodie' },
+      {id: 7, title: 'Akatsuki Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/akatsuki.jpeg', description: 'Iconic Akatsuki cloud design hoodie from Naruto' },
+      {id: 8, title: 'COD Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/cod.jpeg', description: 'Call of Duty inspired gaming hoodie' },
+      {id: 9, title: 'One Piece Bros Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/one_piece_bros.jpeg', description: 'Luffy, Ace & Sabo hoodie for all One Piece fans' },
+      {id: 10, title: 'Tokyo Revengers Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/tokyo_revengers.jpeg', description: 'Tokyo Revengers themed hoodie' },
+      {id: 11, title: 'Batman Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/batman.jpeg', description: 'Dark knight inspired Batman hoodie' },
+      {id: 12, title: 'Gojo Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/gojo.jpeg', description: 'Jujutsu Kaisen fan favorite hoodie with Gojo design' },
+      {id: 13, title: 'Satoru Gojo Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/satoru_gojo.jpeg', description: 'Another Gojo styled hoodie for the true fans' },
+      {id: 14, title: 'Straw Hats Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/straw_hats.jpeg', description: 'One Piece Straw Hats logo crew hoodie' },
+
+      {id: 15, title: 'Protein Powder', price: 1200, cat: 'supplements', img: 'products/supplements/protein_powder.jpeg', description: 'No Pain, No Gain.' },
+      {id: 16, title: 'Honey (1kg)', price: 200, cat: 'supplements', img: 'products/supplements/honey_1kg.jpeg', description: 'The food of Prophets' },
+      {id: 17, title: 'Via-C Powder', price: 350, cat: 'supplements', img: 'products/supplements/vitc_powder.jpeg', description: 'Who even needs Oranges?' },
+
+    ];
+
+
+    const grid = document.getElementById('grid');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const cartBtn = document.getElementById('cartBtn');
+    const cartCount = document.getElementById('cartCount');
+    const cartModal = document.getElementById('cartModal');
+    const cartItems = document.getElementById('cartItems');
+    const cartTotal = document.getElementById('cartTotal');
+    const closeCart = document.getElementById('closeCart');
+    const clearCartBtn = document.getElementById('clearCartBtn');
+    const imgLightbox = document.getElementById('imgLightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const closeLightbox = document.getElementById('closeLightbox');
+
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+    function money(n) {
+      return new Intl.NumberFormat('en-ZA', { style:'currency', currency:'ZAR' }).format(n);
+    }
+
+    function saveCart() {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function updateCartDisplay() {
+      cartCount.textContent = cart.reduce((a, c) => a + c.qty, 0);
+      cartItems.innerHTML = '';
+
+      if (!cart.length) {
+        cartItems.innerHTML = '<p style="color:#aaa">Cart is empty</p>';
+      } else {
+        cart.forEach(item => {
+          const row = document.createElement('div');
+          row.className = 'cart-item';
+          row.innerHTML = `
+            <img src="${item.img}">
+            <div style="flex:1">
+              <div>${item.title}</div>
+              <div style="color:#aaa">${money(item.price)} × ${item.qty}</div>
+            </div>
+            <button class="remove-btn"><i class="fas fa-trash"></i></button>
+          `;
+          row.querySelector('.remove-btn').addEventListener('click', () => {
+            cart = cart.filter(p => p.id !== item.id);
+            saveCart();
+            updateCartDisplay();
+          });
+          cartItems.appendChild(row);
+        });
+      }
+
+      cartTotal.textContent = money(cart.reduce((a,c) => a + c.price * c.qty, 0));
+    }
+
+    function addToCart(p) {
+      const ex = cart.find(i => i.id === p.id);
+      if (ex) ex.qty++;
+      else cart.push({ ...p, qty: 1 });
+      saveCart();
+      updateCartDisplay();
+    }
+
+    function render(list) {
+      grid.innerHTML = '';
+      if (!list.length) {
+        grid.innerHTML = '<div class="empty-state">No products found</div>';
+        return;
+      }
+
+      list.forEach(p => {
+        const card = document.createElement('article');
+        card.className = 'card';
+
+        const inner = document.createElement('div');
+        inner.className = 'card-inner';
+
+        const front = document.createElement('div');
+        front.className = 'card-front';
+        front.innerHTML = `
+          <div class="img-wrap"><img src="${p.img}" alt="${p.title}"></div>
+          <div class="front-body">
+            <div class="product-title-front">${p.title}</div>
+            <div class="price-row">
+              <div class="price">${money(p.price)}</div>
+              <button class="add-btn"><i class="fas fa-plus"></i></button>
+            </div>
+          </div>
+        `;
+
+        const back = document.createElement('div');
+        back.className = 'card-back';
+        back.innerHTML = `
+          <h3>${p.title}</h3>
+          <p>${p.description}</p>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button class="view-img-btn" data-img="${p.img}"><i class="fas fa-image"></i> View</button>
+            <button class="add-btn"><i class="fas fa-plus" style="padding-right: 5px;"></i> Add</button>
+          </div>
+        `;
+
+        inner.append(front, back);
+        card.appendChild(inner);
+        grid.appendChild(card);
+
+        card.addEventListener('click', e => {
+          if (e.target.closest('.add-btn') || e.target.closest('.view-img-btn')) return;
+          const f = document.querySelector('.card.flipped');
+          if (f && f !== card) f.classList.remove('flipped');
+          card.classList.toggle('flipped');
+        });
+
+        front.querySelector('.add-btn').addEventListener('click', e => { e.stopPropagation(); addToCart(p); });
+        back.querySelector('.add-btn').addEventListener('click', e => { e.stopPropagation(); addToCart(p); });
+        back.querySelector('.view-img-btn').addEventListener('click', e => { e.stopPropagation(); lightboxImg.src = p.img; imgLightbox.classList.add('active'); });
+      });
+    }
+
+    function filterAndRender() {
+      const q = searchInput.value.trim().toLowerCase();
+      const cat = document.querySelector('.cat-btn.active').dataset.cat;
+      const filtered = products.filter(p => {
+        const matchCat = (cat === 'all') || p.cat === cat;
+        const matchQ = !q || p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q);
+        return matchCat && matchQ;
+      });
+      render(filtered);
+    }
+
+    // Init
+    filterAndRender();
+    updateCartDisplay();
+
+    searchInput.addEventListener('input', () => { 
+      filterAndRender(); 
+      clearBtn.style.display = searchInput.value ? 'flex' : 'none'; 
+    });
+    searchBtn.addEventListener('click', filterAndRender);
+    clearBtn.addEventListener('click', () => { 
+      searchInput.value = ''; 
+      filterAndRender(); 
+      clearBtn.style.display = 'none'; 
+    });
+
+    document.querySelectorAll('.cat-btn').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterAndRender();
+    }));
+
+    cartBtn.addEventListener('click', () => cartModal.classList.add('active'));
+    closeCart.addEventListener('click', () => cartModal.classList.remove('active'));
+    cartModal.addEventListener('click', e => { if(e.target === cartModal) closeCart.click(); });
+    clearCartBtn.addEventListener('click', () => { 
+      if(cart.length && confirm('Clear cart?')) { cart = []; saveCart(); updateCartDisplay(); } 
+    });
+
+    imgLightbox.addEventListener('click', e => { if(e.target === imgLightbox) imgLightbox.classList.remove('active'); });
+    closeLightbox.addEventListener('click', () => imgLightbox.classList.remove('active'));
+
+    window.addEventListener('keydown', e => {
+      if(e.key === 'Escape') {
+        if(cartModal.classList.contains('active')) closeCart.click();
+        if(imgLightbox.classList.contains('active')) imgLightbox.classList.remove('active');
+      }
+    });
+
+    function money(n) {
+      return `R${n.toFixed(2)}`; // always uses dot
+    }
+
+  </script>
+</body>
+</html>
