@@ -11,9 +11,6 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
 
-  <!-- Style -->
-  <link rel="stylesheet" href="css/scrollToTop.css">
-
   <style>
     :root {
       --bg: #0f0f0f;
@@ -33,7 +30,55 @@
       flex-direction: column;
       min-height: 100vh;
     }
-    
+
+    /* Tooltip / Hint */
+    .hint-tooltip {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: var(--card-bg);
+      color: var(--text);
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 280px;
+      z-index: 999;
+      border: 1px solid var(--accent);
+      animation: fadeInUp 0.5s ease;
+    }
+    .hint-tooltip button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      align-self: flex-end;
+    }
+    .hint-tooltip button:hover { opacity: 0.9; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media(max-width:600px) {
+      .hint-tooltip {
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90vw;
+        text-align: center;
+      }
+      .hint-tooltip button {
+        align-self: center;
+      }
+    }
+
     /* Header */
     header {
       padding: 12px 16px;
@@ -45,27 +90,9 @@
       top: 0;
       z-index: 50;
     }
-
-    .top-row {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .logo {
-      width: 44px;
-      height: 44px;
-      flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .logo img {
-      height: 40px;
-      object-fit: contain;
-      display: block;
-    }
+    .top-row { display: flex; gap: 12px; align-items: center; }
+    .logo { width: 44px; height: 44px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; }
+    .logo img { height: 40px; object-fit: contain; display: block; }
 
     /* Search */
     .search-wrap { flex: 1; display: flex; gap: 6px; }
@@ -79,7 +106,6 @@
       color: #fff;
       font-size: 14px;
     }
-
     #clearBtn {
       position: absolute;
       right: 8px;
@@ -91,7 +117,6 @@
       cursor: pointer;
       display: none;
     }
-
     #searchBtn {
       background: #0066ff;
       border: none;
@@ -105,53 +130,14 @@
     }
 
     /* Cart button */
-    #cartBtn {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      border-radius: 50%;
-      background: #222;
-      width: 40px;
-      height: 40px;
-      flex: 0 0 auto;
-    }
-
+    #cartBtn { position: relative; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 50%; background: #222; width: 40px; height: 40px; flex: 0 0 auto; }
     #cartBtn i { font-size: 18px; }
-
-    #cartCount {
-      position: absolute;
-      bottom: 4px;
-      right: 4px;
-      background: #0066ff;
-      color: #fff;
-      border-radius: 50%;
-      font-size: 11px;
-      min-width: 16px;
-      height: 16px;
-      line-height: 16px;
-      text-align: center;
-      font-weight: 700;
-      padding: 0 4px;
-    }
+    #cartCount { position: absolute; bottom: 4px; right: 4px; background: #0066ff; color: #fff; border-radius: 50%; font-size: 11px; min-width: 16px; height: 16px; line-height: 16px; text-align: center; font-weight: 700; padding: 0 4px; }
 
     /* Categories */
     .cat-bar { display: flex; gap: 8px; flex-wrap: wrap; }
-    .cat-btn {
-      padding: 6px 12px;
-      border-radius: 10px;
-      background: #222;
-      color: #aaa;
-      cursor: pointer;
-      font-size: 14px;
-      border: none;
-    }
-
-    .cat-btn.active {
-      background: #0066ff;
-      color: #fff;
-    }
+    .cat-btn { padding: 6px 12px; border-radius: 10px; background: #222; color: #aaa; cursor: pointer; font-size: 14px; border: none; }
+    .cat-btn.active { background: #0066ff; color: #fff; }
 
     /* Main Grid */
     main { flex: 1; padding: 20px 12px; }
@@ -164,200 +150,54 @@
       margin: 0 auto;
       padding: 0 18px;
     }
-
     @media(max-width:600px) { #grid { grid-template-columns: repeat(2, 1fr); max-width: 100%; } }
 
     /* Cards */
-    .card {
-      perspective: 1000px;
-      max-width: 220px;
-      cursor: pointer;
-    }
-
-    .card-inner {
-      position: relative;
-      width: 100%;
-      height: 320px;
-      transform-style: preserve-3d;
-      transition: transform .5s;
-      border-radius: 12px;
-    }
-
+    .card { perspective: 1000px; max-width: 220px; cursor: pointer; }
+    .card-inner { position: relative; width: 100%; height: 320px; transform-style: preserve-3d; transition: transform .5s; border-radius: 12px; }
     .card.flipped .card-inner { transform: rotateY(180deg); }
-
-    .card-front, .card-back {
-      position: absolute;
-      inset: 0;
-      border-radius: 12px;
-      background: var(--card-bg);
-      backface-visibility: hidden;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
+    .card-front, .card-back { position: absolute; inset: 0; border-radius: 12px; background: var(--card-bg); backface-visibility: hidden; overflow: hidden; display: flex; flex-direction: column; }
     .img-wrap { height: 62%; background: #fff; display: flex; align-items: center; justify-content: center; }
     .img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-
-    .front-body {
-      padding: 8px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex: 1;
-    }
-
+    .front-body { padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
     .product-title-front { font-weight: 600; font-size: 0.95rem; }
-
     .price-row { display: flex; justify-content: space-between; align-items: center; }
     .price { font-weight: 700; font-size: 1.05rem; }
-    .add-btn {
-      background: #0066ff;
-      border: none;
-      cursor: pointer;
-      padding: 8px;
-      border-radius: 10px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-    }
-
-    .card-back {
-      transform: rotateY(180deg);
-      padding: 14px;
-      font-size: 0.95rem;
-    }
-
+    .add-btn { background: #0066ff; border: none; cursor: pointer; padding: 8px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; color: #fff; }
+    .card-back { transform: rotateY(180deg); padding: 14px; font-size: 0.95rem; }
     .card-back h3 { margin: 0 0 6px; font-size: 1.05rem; }
     .card-back p { margin: 0 0 12px; color: var(--muted); }
+    .view-img-btn { background: #94f3a2; color: #012; border: none; padding: 6px 10px; border-radius: 8px; cursor: pointer; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
 
-    .view-img-btn {
-      background: #94f3a2;
-      color: #012;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .empty-state {
-      grid-column: 1/-1;
-      padding: 28px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.03);
-      text-align: center;
-      color: #aaa;
-    }
+    .empty-state { grid-column: 1/-1; padding: 28px; border-radius: 10px; background: rgba(255,255,255,0.03); text-align: center; color: #aaa; }
 
     /* Cart Modal */
-    .cart-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-    }
-
+    .cart-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 100; }
     .cart-modal.active { display: flex; }
-
-    .cart-content {
-      position: relative;
-      background: #1a1a1a;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 560px;
-      max-height: 80vh;
-      overflow: auto;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
+    .cart-content { position: relative; background: #1a1a1a; border-radius: 12px; width: 90%; max-width: 560px; max-height: 80vh; overflow: auto; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
     .cart-items { display: flex; flex-direction: column; gap: 10px; }
-
-    .cart-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: #222;
-      padding: 8px;
-      border-radius: 8px;
-    }
-
+    .cart-item { display: flex; align-items: center; gap: 12px; background: #222; padding: 8px; border-radius: 8px; }
     .cart-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; }
     .remove-btn { background: #ff2a2a; color: #fff; border: none; cursor: pointer; padding: 6px 8px; border-radius: 8px; }
-
-    .cart-footer {
-      border-top: 1px solid #333;
-      padding-top: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    #clearCartBtn {
-      background: #ff2a2a;
-      color: #fff;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-weight: 700;
-    }
-
-    #closeCart {
-      position: absolute;
-      top: 36px;
-      right: 20px;
-      background: #0066ff;
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-    }
-
+    .cart-footer { border-top: 1px solid #333; padding-top: 12px; display: flex; justify-content: space-between; align-items: center; }
+    #clearCartBtn { background: #ff2a2a; color: #fff; border: none; padding: 8px 12px; border-radius: 10px; font-weight: 700; }
+    #closeCart { position: absolute; top: 36px; right: 20px; background: #0066ff; color: #fff; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.4); }
     #closeCart i { font-size: 14px; }
 
     /* Lightbox */
-    .lightbox {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-    }
-
+    .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 200; }
     .lightbox.active { display: flex; }
-
     .lightbox img { max-width: 95%; max-height: 85%; border-radius: 8px; }
-
-    .lightbox .close {
-      position: absolute;
-      top: 18px;
-      right: 18px;
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-size: 22px;
-    }
+    .lightbox .close { position: absolute; top: 18px; right: 18px; background: transparent; border: none; color: #fff; font-size: 22px; }
   </style>
 </head>
 <body>
+
+  <!-- Tooltip -->
+  <div class="hint-tooltip" id="hintTooltip">
+    <div><i class="fas fa-info-circle" style="color:var(--accent);margin-right:6px;"></i> Click a product to flip the card and view its description!</div>
+    <button id="hideTooltipBtn">Do not show again</button>
+  </div>
 
   <!-- Scroll to Top Button  -->
   <a id="scrollToTopBtn" href="#"><i class="fas fa-angle-up"></i></a>
@@ -422,13 +262,10 @@
       {id: 12, title: 'Gojo Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/gojo.jpeg', description: 'Jujutsu Kaisen fan favorite hoodie with Gojo design' },
       {id: 13, title: 'Satoru Gojo Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/satoru_gojo.jpeg', description: 'Another Gojo styled hoodie for the true fans' },
       {id: 14, title: 'Straw Hats Hoodie', price: 650, cat: 'hoodies', img: 'products/hoodies/straw_hats.jpeg', description: 'One Piece Straw Hats logo crew hoodie' },
-
       {id: 15, title: 'Protein Powder', price: 1200, cat: 'supplements', img: 'products/supplements/protein_powder.jpeg', description: 'No Pain, No Gain.' },
       {id: 16, title: 'Honey (1kg)', price: 200, cat: 'supplements', img: 'products/supplements/honey_1kg.jpeg', description: 'The food of Prophets' },
       {id: 17, title: 'Via-C Powder', price: 350, cat: 'supplements', img: 'products/supplements/vitc_powder.jpeg', description: 'Who even needs Oranges?' },
-
     ];
-
 
     const grid = document.getElementById('grid');
     const searchInput = document.getElementById('searchInput');
@@ -445,20 +282,33 @@
     const lightboxImg = document.getElementById('lightboxImg');
     const closeLightbox = document.getElementById('closeLightbox');
 
+    const hintTooltip = document.getElementById('hintTooltip');
+    const hideTooltipBtn = document.getElementById('hideTooltipBtn');
+
     let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
+    // Tooltip logic
+    window.addEventListener('DOMContentLoaded', () => {
+      const hideHint = localStorage.getItem('hideHint');
+      if (!hideHint) {
+        hintTooltip.style.display = 'flex';
+      }
+    });
+
+    hideTooltipBtn.addEventListener('click', () => {
+      localStorage.setItem('hideHint', '1');
+      hintTooltip.style.display = 'none';
+    });
+
     function money(n) {
-      return new Intl.NumberFormat('en-ZA', { style:'currency', currency:'ZAR' }).format(n);
+      return `R${n.toFixed(2)}`;
     }
 
-    function saveCart() {
-      localStorage.setItem('cart', JSON.stringify(cart));
-    }
+    function saveCart() { localStorage.setItem('cart', JSON.stringify(cart)); }
 
     function updateCartDisplay() {
       cartCount.textContent = cart.reduce((a, c) => a + c.qty, 0);
       cartItems.innerHTML = '';
-
       if (!cart.length) {
         cartItems.innerHTML = '<p style="color:#aaa">Cart is empty</p>';
       } else {
@@ -475,13 +325,11 @@
           `;
           row.querySelector('.remove-btn').addEventListener('click', () => {
             cart = cart.filter(p => p.id !== item.id);
-            saveCart();
-            updateCartDisplay();
+            saveCart(); updateCartDisplay();
           });
           cartItems.appendChild(row);
         });
       }
-
       cartTotal.textContent = money(cart.reduce((a,c) => a + c.price * c.qty, 0));
     }
 
@@ -489,8 +337,7 @@
       const ex = cart.find(i => i.id === p.id);
       if (ex) ex.qty++;
       else cart.push({ ...p, qty: 1 });
-      saveCart();
-      updateCartDisplay();
+      saveCart(); updateCartDisplay();
     }
 
     function render(list) {
@@ -499,16 +346,11 @@
         grid.innerHTML = '<div class="empty-state">No products found</div>';
         return;
       }
-
       list.forEach(p => {
         const card = document.createElement('article');
         card.className = 'card';
-
-        const inner = document.createElement('div');
-        inner.className = 'card-inner';
-
-        const front = document.createElement('div');
-        front.className = 'card-front';
+        const inner = document.createElement('div'); inner.className = 'card-inner';
+        const front = document.createElement('div'); front.className = 'card-front';
         front.innerHTML = `
           <div class="img-wrap"><img src="${p.img}" alt="${p.title}"></div>
           <div class="front-body">
@@ -519,9 +361,7 @@
             </div>
           </div>
         `;
-
-        const back = document.createElement('div');
-        back.className = 'card-back';
+        const back = document.createElement('div'); back.className = 'card-back';
         back.innerHTML = `
           <h3>${p.title}</h3>
           <p>${p.description}</p>
@@ -530,18 +370,13 @@
             <button class="add-btn"><i class="fas fa-plus" style="padding-right: 5px;"></i> Add</button>
           </div>
         `;
-
-        inner.append(front, back);
-        card.appendChild(inner);
-        grid.appendChild(card);
+        inner.append(front, back); card.appendChild(inner); grid.appendChild(card);
 
         card.addEventListener('click', e => {
           if (e.target.closest('.add-btn') || e.target.closest('.view-img-btn')) return;
-          const f = document.querySelector('.card.flipped');
-          if (f && f !== card) f.classList.remove('flipped');
+          const f = document.querySelector('.card.flipped'); if (f && f !== card) f.classList.remove('flipped');
           card.classList.toggle('flipped');
         });
-
         front.querySelector('.add-btn').addEventListener('click', e => { e.stopPropagation(); addToCart(p); });
         back.querySelector('.add-btn').addEventListener('click', e => { e.stopPropagation(); addToCart(p); });
         back.querySelector('.view-img-btn').addEventListener('click', e => { e.stopPropagation(); lightboxImg.src = p.img; imgLightbox.classList.add('active'); });
@@ -560,47 +395,19 @@
     }
 
     // Init
-    filterAndRender();
-    updateCartDisplay();
+    filterAndRender(); updateCartDisplay();
 
-    searchInput.addEventListener('input', () => { 
-      filterAndRender(); 
-      clearBtn.style.display = searchInput.value ? 'flex' : 'none'; 
-    });
+    searchInput.addEventListener('input', () => { filterAndRender(); clearBtn.style.display = searchInput.value ? 'flex' : 'none'; });
     searchBtn.addEventListener('click', filterAndRender);
-    clearBtn.addEventListener('click', () => { 
-      searchInput.value = ''; 
-      filterAndRender(); 
-      clearBtn.style.display = 'none'; 
-    });
-
-    document.querySelectorAll('.cat-btn').forEach(btn => btn.addEventListener('click', () => {
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      filterAndRender();
-    }));
-
+    clearBtn.addEventListener('click', () => { searchInput.value = ''; filterAndRender(); clearBtn.style.display = 'none'; });
+    document.querySelectorAll('.cat-btn').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); filterAndRender(); }));
     cartBtn.addEventListener('click', () => cartModal.classList.add('active'));
     closeCart.addEventListener('click', () => cartModal.classList.remove('active'));
     cartModal.addEventListener('click', e => { if(e.target === cartModal) closeCart.click(); });
-    clearCartBtn.addEventListener('click', () => { 
-      if(cart.length && confirm('Clear cart?')) { cart = []; saveCart(); updateCartDisplay(); } 
-    });
-
+    clearCartBtn.addEventListener('click', () => { if(cart.length && confirm('Clear cart?')) { cart = []; saveCart(); updateCartDisplay(); } });
     imgLightbox.addEventListener('click', e => { if(e.target === imgLightbox) imgLightbox.classList.remove('active'); });
     closeLightbox.addEventListener('click', () => imgLightbox.classList.remove('active'));
-
-    window.addEventListener('keydown', e => {
-      if(e.key === 'Escape') {
-        if(cartModal.classList.contains('active')) closeCart.click();
-        if(imgLightbox.classList.contains('active')) imgLightbox.classList.remove('active');
-      }
-    });
-
-    function money(n) {
-      return `R${n.toFixed(2)}`; // always uses dot
-    }
-
+    window.addEventListener('keydown', e => { if(e.key === 'Escape') { if(cartModal.classList.contains('active')) closeCart.click(); if(imgLightbox.classList.contains('active')) imgLightbox.classList.remove('active'); }});
   </script>
 </body>
 </html>
