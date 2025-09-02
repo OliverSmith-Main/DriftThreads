@@ -1,994 +1,1386 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>DriftThreads — Home (modal + lightbox UX) — Fixed</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="icon" href="assets/favicon.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
-
-  <style>
+  <head>
+    <meta charset="utf-8" />
+    <title>DriftThreads — Home</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="assets/favicon.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+    <style> 
 /* ===== Base / helpers ===== */
-:root{
-  /* --bg:#0f0f0f; */
-  /* --card-bg:#1a1a1a; */
-  --bg:radial-gradient(circle at center, #2a3a44, #161616 75%); 
-  --card-bg: radial-gradient(circle at center, #383838, #161616 85%);
-  --text:#fff;
-  --accent:#0af;
-  --muted:#9aa0a6;
-  --transition:240ms; 
-  --ease:cubic-bezier(.22,.9,.27,1); 
-  --card-radius:12px;
+ :root{
+    /* --bg:#0f0f0f;
+     */
+    /* --card-bg:#1a1a1a;
+     */
+     --bg:radial-gradient(circle at center, #2a3a44, #161616 75%);
+     --card-bg: radial-gradient(circle at center, #383838, #161616 85%);
+     --text:#fff;
+     --accent:#0af;
+     --muted:#9aa0a6;
+     --transition:240ms;
+     --ease:cubic-bezier(.22,.9,.27,1);
+     --card-radius:12px;
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-html,body{margin:0;padding:0;width:100%;height:100%;background:var(--bg);color:var(--text);font-family:'Lexend',sans-serif}
-a{color:inherit}
-::selection{background:rgba(10,170,255,0.14)}
+ *{
+    box-sizing:border-box
+}
+ html{
+    scroll-behavior:smooth
+}
+ html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Lexend',sans-serif
+}
+ a{
+    color:inherit
+}
+ ::selection{
+    background:rgba(10,170,255,0.14)
+}
 /* hide thin webkit scrollbar */
-::-webkit-scrollbar{width:0;background:transparent}
-#scrollToTopBtn i { text-decoration:none; line-height:1; font-size:20px; display:inline-block; }
-
+ ::-webkit-scrollbar{
+    width:0;
+    background:transparent
+}
+ #scrollToTopBtn i {
+     text-decoration:none;
+     line-height:1;
+     font-size:20px;
+     display:inline-block;
+}
 /* ===== Scroll-to-top button ===== */
 /* ---------- scrollToTop button (replace existing block) ---------- */
-#scrollToTopBtn {
-  position: fixed;
-  width: 50px;
-  height: 50px;
-  background: #fff;
-  color: #111;
-  bottom: 30px;
-  right: 30px;
-  border-radius: 50%;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 45px;
-  cursor: pointer;
-  font-size: 25px;
-  z-index: 9;
-  border: none;
-  -webkit-tap-highlight-color: transparent;
-
-  /* smooth transitions */
-  transition:
-    transform 220ms cubic-bezier(.22,.9,.27,1),
-    background 180ms ease,
-    box-shadow 180ms ease,
-    opacity 180ms ease;
-  will-change: transform, opacity, box-shadow;
-
-  /* hidden by default; .visible will enable */
-  transform: translateY(8px) scale(0.98);
-  opacity: 0;
-  pointer-events: none;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+ #scrollToTopBtn {
+     position: fixed;
+     width: 50px;
+     height: 50px;
+     background: #fff;
+     color: #111;
+     bottom: 30px;
+     right: 30px;
+     border-radius: 50%;
+     text-decoration: none;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     line-height: 45px;
+     cursor: pointer;
+     font-size: 25px;
+     z-index: 9;
+     border: none;
+     -webkit-tap-highlight-color: transparent;
+    /* smooth transitions */
+     transition: transform 220ms cubic-bezier(.22,.9,.27,1), background 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+     will-change: transform, opacity, box-shadow;
+    /* hidden by default;
+     .visible will enable */
+     transform: translateY(8px) scale(0.98);
+     opacity: 0;
+     pointer-events: none;
+     box-shadow: 0 12px 30px rgba(0,0,0,0.12);
 }
-
 /* visible state — your JS should add/remove this class */
-#scrollToTopBtn.visible {
-  pointer-events: auto;
-  opacity: 0.98;
-  transform: translateY(0) scale(1);
+ #scrollToTopBtn.visible {
+     pointer-events: auto;
+     opacity: 0.98;
+     transform: translateY(0) scale(1);
 }
-
 /* hover / focus (smooth scale in) */
-#scrollToTopBtn.visible:hover,
-#scrollToTopBtn.visible:focus,
-#scrollToTopBtn.visible.focused {
-  background: var(--accent);
-  transform: translateY(0) scale(1.1);
-  box-shadow: 0 5px 5px rgba(10,170,255,0.16);
-  outline: none;
+ #scrollToTopBtn.visible:hover, #scrollToTopBtn.visible:focus, #scrollToTopBtn.visible.focused {
+     background: var(--accent);
+     transform: translateY(0) scale(1.1);
+     box-shadow: 0 5px 5px rgba(10,170,255,0.16);
+     outline: none;
 }
-
 /* active / pressed state */
-#scrollToTopBtn.visible:active,
-#scrollToTopBtn.visible.pressed {
-  transform: translateY(0) scale(0.96);
-  transition: transform 120ms cubic-bezier(.2,.8,.2,1);
+ #scrollToTopBtn.visible:active, #scrollToTopBtn.visible.pressed {
+     transform: translateY(0) scale(0.96);
+     transition: transform 120ms cubic-bezier(.2,.8,.2,1);
 }
-
-@keyframes clickPop {
-  0% { transform: scale(1) translateY(0); }
-  40% { transform: scale(0.86) translateY(2px); }
-  100% { transform: scale(1.08) translateY(-2px); }
+ @keyframes clickPop {
+     0% {
+         transform: scale(1) translateY(0);
+    }
+     40% {
+         transform: scale(0.86) translateY(2px);
+    }
+     100% {
+         transform: scale(1.08) translateY(-2px);
+    }
 }
-#scrollToTopBtn:active { transform: scale(0.96) !important; }
-
+ #scrollToTopBtn:active {
+     transform: scale(0.96) !important;
+}
 /* Focus */
-#scrollToTopBtn:focus, #scrollToTopBtn.focused {
-  outline: 3px solid rgba(0,102,255,0.18);
-  outline-offset: 4px;
+ #scrollToTopBtn:focus, #scrollToTopBtn.focused {
+     outline: 3px solid rgba(0,102,255,0.18);
+     outline-offset: 4px;
 }
-
 /* Mobile adjustments */
-@media (max-width: 600px) {
-    #scrollToTopBtn { height:38px; width:38px; font-size:20px; right: calc(50vw - 19px); bottom:20px; }
+ @media (max-width: 600px) {
+     #scrollToTopBtn {
+         height:38px;
+         width:38px;
+         font-size:20px;
+         right: calc(50vw - 19px);
+         bottom:20px;
+    }
 }
-
 /* ===== Page layout / header / grid etc (kept from original) ===== */
-header{position:sticky;top:10px;z-index:50;background: rgba(22, 22, 22, 0.95);padding:12px 16px;box-shadow:0 1px 0 rgba(255,255,255,0.02); margin:10px; border-radius: var(--card-radius);outline: 1px solid #fff;outline-offset: -1px;}
-.top-row{display:flex;gap:12px;align-items:center}
-.logo img{height:40px;display:block;background:#fff;padding:6px;border-radius:8px}
-.search-wrap{flex:1;display:flex;gap:6px}
-.search-box{position:relative;flex:1;min-width:0}
-.search-box input{
-  width:100%;padding:10px 36px 10px 12px;border-radius:25px 5px 5px 25px;background:#2b2b2b;border:0;color:#fff;font-size:14px;outline:none;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.02);
+ header{
+    position:sticky;
+    top:10px;
+    z-index:50;
+    background: rgba(22, 22, 22, 0.95);
+    padding:12px 16px;
+    box-shadow:0 1px 0 rgba(255,255,255,0.02);
+     margin:10px;
+     border-radius: var(--card-radius);
+    outline: 1px solid #fff;
+    outline-offset: -1px;
 }
-#clearBtn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;border:0;color:#888;cursor:pointer;display:none;padding:6px;border-radius:6px}
-#searchBtn{background:#0066ff;border:0;color:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;box-shadow:0 8px 18px rgba(0,102,255,0.12)}
-#cartBtn{width:44px;height:44px;border-radius:50%;background:#222;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
-#cartCount{position:absolute;right:6px;bottom:6px;background:#0066ff;color:#fff;border-radius:50%;min-width:16px;height:16px;line-height:16px;text-align:center;font-size:11px;padding:0 4px}
-#cartCount.pop{animation:popBadge 420ms var(--ease)}
-@keyframes popBadge{0%{transform:scale(1)}30%{transform:scale(1.35)}100%{transform:scale(1)}}
-
+ .top-row{
+    display:flex;
+    gap:12px;
+    align-items:center
+}
+ .logo img{
+    height:40px;
+    display:block;
+    background:#fff;
+    padding:6px;
+    border-radius:8px
+}
+ .search-wrap{
+    flex:1;
+    display:flex;
+    gap:6px
+}
+ .search-box{
+    position:relative;
+    flex:1;
+    min-width:0
+}
+ .search-box input{
+     width:100%;
+    padding:10px 36px 10px 12px;
+    border-radius:25px 5px 5px 25px;
+    background:#2b2b2b;
+    border:0;
+    color:#fff;
+    font-size:14px;
+    outline:none;
+     box-shadow: 0 4px 18px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.02);
+}
+ #clearBtn{
+    position:absolute;
+    right:8px;
+    top:50%;
+    transform:translateY(-50%);
+    background:transparent;
+    border:0;
+    color:#888;
+    cursor:pointer;
+    display:none;
+    padding:6px;
+    border-radius:6px
+}
+ #searchBtn{
+    background:#0066ff;
+    border:0;
+    color:#fff;
+    border-radius:8px;
+    padding:8px 12px;
+    cursor:pointer;
+    box-shadow:0 8px 18px rgba(0,102,255,0.12)
+}
+ #cartBtn{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background:#222;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    position:relative
+}
+ #cartCount{
+    position:absolute;
+    right:6px;
+    bottom:6px;
+    background:#0066ff;
+    color:#fff;
+    border-radius:50%;
+    min-width:16px;
+    height:16px;
+    line-height:16px;
+    text-align:center;
+    font-size:11px;
+    padding:0 4px
+}
+ #cartCount.pop{
+    animation:popBadge 420ms var(--ease)
+}
+ @keyframes popBadge{
+    0%{
+        transform:scale(1)
+    }
+    30%{
+        transform:scale(1.35)
+    }
+    100%{
+        transform:scale(1)
+    }
+}
 /* categories */
-.cat-bar{display:flex;gap:8px;padding-top:10px;flex-wrap:wrap; margin-left: 30px;
+ .cat-bar{
+    display:flex;
+    gap:8px;
+    padding-top:10px;
+    flex-wrap:wrap;
+     margin-left: 30px;
 }
-.cat-btn{background:#fff;color:#222;padding:6px 12px;border-radius:10px;border:0;cursor:pointer}
-.cat-btn.active{background:#0066ff;color:#fff}
-
+ .cat-btn{
+    background:#fff;
+    color:#222;
+    padding:6px 12px;
+    border-radius:10px;
+    border:0;
+    cursor:pointer
+}
+ .cat-btn.active{
+    background:#0066ff;
+    color:#fff
+}
 /* grid */
-main{padding:20px 12px;flex:1}
-#grid{display:grid;grid-template-columns:repeat(auto-fill,220px);gap:20px;justify-content:center;max-width:calc(220px*5 + 20px*4);margin:0 auto;padding:0 18px}
-@media(max-width:900px){#grid{grid-template-columns:repeat(auto-fill,200px)}}
-@media(max-width:600px){#grid{grid-template-columns:repeat(2,1fr);max-width:100%}}
-
+ main{
+    padding:20px 12px;
+    flex:1
+}
+ #grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,220px);
+    gap:20px;
+    justify-content:center;
+    max-width:calc(220px*5 + 20px*4);
+    margin:0 auto;
+    padding:0 18px
+}
+ @media(max-width:900px){
+    #grid{
+        grid-template-columns:repeat(auto-fill,200px)
+    }
+}
+ @media(max-width:600px){
+    #grid{
+        grid-template-columns:repeat(2,1fr);
+        max-width:100%
+    }
+}
 /* card flip */
-.card{perspective:1200px;max-width:220px;cursor:pointer;border-radius:var(--card-radius);transition:box-shadow var(--transition) var(--ease),transform var(--transition) var(--ease);will-change:transform;opacity:0}
-.card.pop-in{animation:fadeInUp .36s var(--ease) forwards}
-@keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-.card:hover{transform:translateY(-8px);box-shadow:0 24px 60px rgba(0,0,0,.6)}
-.card-inner{position:relative;width:100%;height:320px;border-radius:var(--card-radius);transform-style:preserve-3d;transition:transform .5s var(--ease)}
-.card-front,.card-back{position:absolute;inset:0;border-radius:var(--card-radius);display:flex;flex-direction:column;overflow:hidden;backface-visibility:hidden;
-  background:radial-gradient(circle at top left, #2c2c2c, #161616 80%);
-  
-  
-  transition:opacity .18s linear;pointer-events:none}
-  .card-front{transform:rotateY(0deg) translateZ(0.1px);z-index:2;pointer-events:auto}
-.card-back{transform:rotateY(180deg) translateZ(0.1px);z-index:1;color:#e6f7ff;padding:14px;font-size:.95rem;gap:8px;justify-content:flex-start}
-.card.flipped .card-inner{transform:rotateY(180deg)}
-.card.flipped .card-front{z-index:1;pointer-events:none}
-.card.flipped .card-back{z-index:2;pointer-events:auto}
-
+ .card{
+    perspective:1200px;
+    max-width:220px;
+    cursor:pointer;
+    border-radius:var(--card-radius);
+    transition:box-shadow var(--transition) var(--ease),transform var(--transition) var(--ease);
+    will-change:transform;
+    opacity:0
+}
+ .card.pop-in{
+    animation:fadeInUp .36s var(--ease) forwards
+}
+ @keyframes fadeInUp{
+    from{
+        opacity:0;
+        transform:translateY(18px)
+    }
+    to{
+        opacity:1;
+        transform:translateY(0)
+    }
+}
+ .card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 24px 60px rgba(0,0,0,.6)
+}
+ .card-inner{
+    position:relative;
+    width:100%;
+    height:320px;
+    border-radius:var(--card-radius);
+    transform-style:preserve-3d;
+    transition:transform .5s var(--ease)
+}
+ .card-front,.card-back{
+    position:absolute;
+    inset:0;
+    border-radius:var(--card-radius);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    backface-visibility:hidden;
+     background:radial-gradient(circle at top left, #2c2c2c, #161616 80%);
+     transition:opacity .18s linear;
+    pointer-events:none
+}
+ .card-front{
+    transform:rotateY(0deg) translateZ(0.1px);
+    z-index:2;
+    pointer-events:auto
+}
+ .card-back{
+    transform:rotateY(180deg) translateZ(0.1px);
+    z-index:1;
+    color:#e6f7ff;
+    padding:14px;
+    font-size:.95rem;
+    gap:8px;
+    justify-content:flex-start
+}
+ .card.flipped .card-inner{
+    transform:rotateY(180deg)
+}
+ .card.flipped .card-front{
+    z-index:1;
+    pointer-events:none
+}
+ .card.flipped .card-back{
+    z-index:2;
+    pointer-events:auto
+}
 /* images */
-.img-wrap{height:62%;background:#fff;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform 420ms var(--ease)}
-.img-wrap img:hover{transform:scale(1.05)}
-.front-body{padding:8px 10px;display:flex;flex-direction:column;gap:6px;flex:1}
-.product-title-front{font-weight:700;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.price-row{display:flex;justify-content:space-between;align-items:center}
-.price{font-weight:800;font-size:1.05rem;color:#e8f8ff}
-.add-btn{transition: all 0.3s ease; background:linear-gradient(180deg,#f9a8d4, #c084fc);border:0;padding:8px 10px 8px 10px;border-radius:10px;color:#000;font-weight:700;cursor:pointer}
-.add-btn:hover{transform:translateY(-3px)}
-.view-img-btn{transition: all 0.3s ease;background: linear-gradient(90deg, #6ee7ff, #a78bfa);
-  color: #000;border: 0;padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:700}
-.view-img-btn:hover{transform:translateY(-2px)}
-
+ .img-wrap{
+    height:62%;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden
+}
+ .img-wrap img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:transform 420ms var(--ease)
+}
+ .img-wrap img:hover{
+    transform:scale(1.05)
+}
+ .front-body{
+    padding:8px 10px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    flex:1
+}
+ .product-title-front{
+    font-weight:700;
+    font-size:.95rem;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis
+}
+ .price-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center
+}
+ .price{
+    font-weight:800;
+    font-size:1.05rem;
+    color:#e8f8ff
+}
+ .add-btn{
+    transition: all 0.3s ease;
+     background:linear-gradient(180deg,#f9a8d4, #c084fc);
+    border:0;
+    padding:8px 10px 8px 10px;
+    border-radius:10px;
+    color:#000;
+    font-weight:700;
+    cursor:pointer
+}
+ .add-btn:hover{
+    transform:translateY(-3px)
+}
+ .view-img-btn{
+    transition: all 0.3s ease;
+    background: linear-gradient(90deg, #6ee7ff, #a78bfa);
+     color: #000;
+    border: 0;
+    padding:6px 10px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:700
+}
+ .view-img-btn:hover{
+    transform:translateY(-2px)
+}
 /* empty state / toast / modal / lightbox */
-.empty-state{grid-column:1/-1;padding:28px;border-radius:10px;background:rgba(255,255,255,0.03);text-align:center;color:#aaa}
-.add-notif{position:fixed;bottom:20px;left:20px;background:linear-gradient(180deg,rgba(26,26,26,.98),rgba(18,18,18,.98));padding:10px;border-radius:10px;display:flex;gap:10px;align-items:center;border:1px solid rgba(10,170,255,.12);box-shadow:0 12px 36px rgba(0,0,0,.6);z-index:1200;opacity:0;pointer-events:none;transform:translateY(18px)}
-.add-notif.visible{animation:fadeInUp .28s var(--ease) forwards;pointer-events:auto}
-.add-notif.hiding{animation:fadeOutDown .28s var(--ease) forwards;pointer-events:none}
-.add-notif .product-thumb{width:48px;height:48px;object-fit:cover;border-radius:8px;background:#fff;padding:3px}
-.add-notif .msg{color:#e6f7ff;flex:1}
-.undo-btn,.close-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:6px 8px;border-radius:8px;color:#fff;cursor:pointer}
-@keyframes fadeOutDown{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(18px)}}
-
+ .empty-state{
+    grid-column:1/-1;
+    padding:28px;
+    border-radius:10px;
+    background:rgba(255,255,255,0.03);
+    text-align:center;
+    color:#aaa
+}
+ .add-notif{
+    position:fixed;
+    bottom:20px;
+    left:20px;
+    background:linear-gradient(180deg,rgba(26,26,26,.98),rgba(18,18,18,.98));
+    padding:10px;
+    border-radius:10px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    border:1px solid rgba(10,170,255,.12);
+    box-shadow:0 12px 36px rgba(0,0,0,.6);
+    z-index:1200;
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(18px)
+}
+ .add-notif.visible{
+    animation:fadeInUp .28s var(--ease) forwards;
+    pointer-events:auto
+}
+ .add-notif.hiding{
+    animation:fadeOutDown .28s var(--ease) forwards;
+    pointer-events:none
+}
+ .add-notif .product-thumb{
+    width:48px;
+    height:48px;
+    object-fit:cover;
+    border-radius:8px;
+    background:#fff;
+    padding:3px
+}
+ .add-notif .msg{
+    color:#e6f7ff;
+    flex:1
+}
+ .undo-btn,.close-btn{
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.06);
+    padding:6px 8px;
+    border-radius:8px;
+    color:#fff;
+    cursor:pointer
+}
+ @keyframes fadeOutDown{
+    from{
+        opacity:1;
+        transform:translateY(0)
+    }
+    to{
+        opacity:0;
+        transform:translateY(18px)
+    }
+}
 /* cart modal */
-.cart-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:100}
-.cart-modal.active{display:flex}
-.cart-content{background:#1a1a1a;border-radius:12px;padding:18px;width:90%;max-width:560px;max-height:80vh;overflow:auto;box-shadow:0 40px 120px rgba(0,0,0,.7);position:relative}
-#closeCart{position:absolute;right:25px;top:30px;background:#0066ff;border:0;color:#fff;border-radius:50%;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 10px 30px rgba(0,102,255,0.12)}
-
+ .cart-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.6);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100
+}
+ .cart-modal.active{
+    display:flex
+}
+ .cart-content{
+    background:#1a1a1a;
+    border-radius:12px;
+    padding:18px;
+    width:90%;
+    max-width:560px;
+    max-height:80vh;
+    overflow:auto;
+    box-shadow:0 40px 120px rgba(0,0,0,.7);
+    position:relative
+}
+ #closeCart{
+    position:absolute;
+    right:25px;
+    top:30px;
+    background:#0066ff;
+    border:0;
+    color:#fff;
+    border-radius:50%;
+    width:36px;
+    height:36px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 10px 30px rgba(0,102,255,0.12)
+}
 /* lightbox */
-.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:200;touch-action:none}
-.lightbox.active{display:flex}
-.lightbox img{max-width:95%;max-height:85%;border-radius:8px;touch-action:manipulation}
-#loadingSpinner{text-align:center;padding:18px 0;color:#99bfe8}
-:focus-visible{outline:3px solid rgba(0,102,255,0.12);outline-offset:3px;border-radius:8px}
-
+ .lightbox{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.85);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:200;
+    touch-action:none
+}
+ .lightbox.active{
+    display:flex
+}
+ .lightbox img{
+    max-width:95%;
+    max-height:85%;
+    border-radius:8px;
+    touch-action:manipulation
+}
+ #loadingSpinner{
+    text-align:center;
+    padding:18px 0;
+    color:#99bfe8
+}
+ :focus-visible{
+    outline:3px solid rgba(0,102,255,0.12);
+    outline-offset:3px;
+    border-radius:8px
+}
 /* preloader */
-#preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #111; display: flex; align-items:center; justify-content:center; z-index: 999999; transition: opacity 0.6s ease; }
-.loader { width:50px; height:50px; border:5px solid #555; border-top:5px solid var(--accent); border-radius:50%; animation:spin 1s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-#preloader.hidden { opacity:0; pointer-events:none; }
-
+ #preloader {
+     position: fixed;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     background: #111;
+     display: flex;
+     align-items:center;
+     justify-content:center;
+     z-index: 999999;
+     transition: opacity 0.6s ease;
+}
+ .loader {
+     width:50px;
+     height:50px;
+     border:5px solid #555;
+     border-top:5px solid var(--accent);
+     border-radius:50%;
+     animation:spin 1s linear infinite;
+}
+ @keyframes spin {
+     to {
+         transform: rotate(360deg);
+    }
+}
+ #preloader.hidden {
+     opacity:0;
+     pointer-events:none;
+}
 /* modal-open restrictions */
-body.modal-open { overflow: hidden; touch-action: none; }
-body.modal-open header, body.modal-open main { pointer-events: none; user-select: none; -webkit-user-select: none; }
-body.modal-open .cart-content, body.modal-open .lightbox, body.modal-open .lightbox img { pointer-events: auto; touch-action: auto; -webkit-overflow-scrolling: touch; }
-  </style>
-</head>
-<body>
+ body.modal-open {
+     overflow: hidden;
+     touch-action: none;
+}
+ body.modal-open header, body.modal-open main {
+     pointer-events: none;
+     user-select: none;
+     -webkit-user-select: none;
+}
+ body.modal-open .cart-content, body.modal-open .lightbox, body.modal-open .lightbox img {
+     pointer-events: auto;
+     touch-action: auto;
+     -webkit-overflow-scrolling: touch;
+}
+ </style>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const preloader = document.getElementById("preloader");
-    const minTime = 1000;
-    const start = Date.now();
-    window.addEventListener("load", () => {
-      const elapsed = Date.now() - start;
-      const remaining = Math.max(0, minTime - elapsed);
-      setTimeout(() => {
-        preloader.classList.add("hidden");
-        setTimeout(() => preloader.remove(), 600);
-      }, remaining);
-    });
-  });
-</script>
+  </head>
 
-<div id="preloader"><div class="loader"></div></div>
+  <body>
 
-<!-- toast -->
-<div id="addNotif" class="add-notif" role="status" aria-live="polite" aria-atomic="true">
-  <img id="addNotifThumb" class="product-thumb" src="" alt="">
-  <div id="addNotifMsg" class="msg">Product added to cart</div>
-  <button id="undoAddBtn" class="undo-btn" aria-label="Undo add">Undo</button>
-  <button id="closeAddNotif" class="close-btn" aria-label="Dismiss"><i class="fas fa-times"></i></button>
-</div>
-
-<!-- tooltip -->
-<div class="hint-tooltip" id="hintTooltip" role="note" style="display:none;position:fixed;bottom:20px;left:20px;max-width:320px;z-index:1100;background:linear-gradient(180deg,rgba(26,26,26,.98),rgba(20,20,20,.98));padding:14px;border-radius:10px;border:1px solid rgba(10,170,255,.06);box-shadow:0 8px 22px rgba(0,0,0,.6)">
-  <div style="display:flex;align-items:center;gap:8px">
-    <i class="fas fa-info-circle" style="color:var(--accent)"></i>
-    <div>Click a product to flip the card and view details.</div>
-  </div>
-  <div style="text-align:right;margin-top:10px"><button id="hideTooltipBtn" style="background:var(--accent);border-radius:8px;padding:6px 10px;border:0;color:#012;font-weight:700">Do not show again</button></div>
-</div>
-
-<!-- Scroll to Top Button -->
-<a id="scrollToTopBtn" href="#" role="button" aria-label="Scroll to top" tabindex="0"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
-
-<header>
-  <div class="top-row">
-    <div class="logo"><img src="assets/favicon.png" alt="logo"></div>
-    <div class="search-wrap">
-      <div class="search-box">
-        <input id="searchInput" type="text" placeholder="Search products..." aria-label="Search products">
-        <button id="clearBtn" type="button" aria-label="Clear search"><i class="fas fa-times"></i></button>
-      </div>
-      <button id="searchBtn" type="button" aria-label="Search" style="border-radius: 5px 25px 25px 5px;"><i class="fas fa-search"></i></button>
-    </div>
-
-    <div id="cartBtn" role="button" tabindex="0" aria-label="Shopping cart" style="position:relative">
-      <i class="fas fa-shopping-cart"></i>
-      <span id="cartCount">0</span>
-    </div>
-  </div>
-
-</header>
-
-<div class="cat-bar" role="tablist">
-  <button class="cat-btn active" data-cat="all" type="button">All</button>
-  <button class="cat-btn" data-cat="hoodies" type="button">Hoodies</button>
-  <button class="cat-btn" data-cat="supplements" type="button">Supplements</button>
-  <button class="cat-btn" data-cat="other" type="button">Other</button>
-</div>
-
-<main>
-  <section id="grid" aria-live="polite" aria-busy="false"></section>
-  <div id="loadingSpinner" style="display:none"><i class="fas fa-spinner fa-pulse fa-2x"></i></div>
-</main>
-
-<div id="cartModal" class="cart-modal" aria-hidden="true">
-  <div class="cart-content" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
-    <button id="closeCart" type="button" aria-label="Close cart"><i class="fas fa-times"></i></button>
-    <h2 id="cartTitle">Your Cart</h2>
-    <div style="color:var(--muted);margin-bottom:16px">Screenshot this cart, and <a href="https://wa.me/+27713468567" target="_blank" rel="noopener noreferrer" style="color:rgb(4,202,4)">message +27 67 534 2232</a> on WhatsApp to order.</div>
-    <div id="cartItems" class="cart-items"></div>
-    <div style="border-top:1px solid #333;padding-top:12px;display:flex;justify-content:space-between;align-items:center">
-      <button id="clearCartBtn" type="button" style="background:#ff2a2a;color:#fff;border-radius:10px;padding:8px 12px;border:0">Clear</button>
-      <div><strong>Total:</strong> <span id="cartTotal">R0.00</span></div>
-    </div>
-  </div>
-</div>
-
-<div id="imgLightbox" class="lightbox" aria-hidden="true" tabindex="-1">
-  <button id="closeLightbox" type="button" aria-label="Close image" style="position:absolute;right:18px;top:18px;background:transparent;border:0;color:#fff;font-size:22px; cursor: pointer;"><i class="fas fa-times"></i></button>
-  <img id="lightboxImg" alt="" style="max-width:95%;max-height:85%;border-radius:8px;touch-action:manipulation">
-</div>
-
-<script>
-/* ========== DATA & REFS ========= */
-const products = [
-  {id:1,title:'Kakashi Hoodie',price:650,cat:'hoodies',img:'products/hoodies/kakashi.jpeg',description:"Premium cotton-blend hoodie featuring Kakashi's fanart"},
-  {id:2,title:'BMW Hoodie',price:650,cat:'hoodies',img:'products/hoodies/bmw.jpeg',description:'Classic "I need Money for BMW" hoodie'},
-  {id:3,title:'911 GT3 RS Hoodie',price:650,cat:'hoodies',img:'products/hoodies/911_gt3_rs.jpeg',description:'Sleek hoodie with the Porsche 911 GT3 RS'},
-  {id:4,title:'BMW M Hoodie',price:650,cat:'hoodies',img:'products/hoodies/bmw_m.jpeg',description:'Stylish BMW M series inspired hoodie'},
-  {id:5,title:'Monkey D. Luffy Hoodie',price:650,cat:'hoodies',img:'products/hoodies/monkey_d_luffy.jpeg',description:'One Piece fan favorite hoodie with Luffy print'},
-  {id:6,title:'Tokyo Ghoul Hoodie',price:650,cat:'hoodies',img:'products/hoodies/tokyo_ghoul.jpeg',description:'Dark and edgy Tokyo Ghoul themed hoodie'},
-  {id:7,title:'Akatsuki Hoodie',price:750,cat:'hoodies',img:'products/hoodies/akatsuki.jpeg',description:'Iconic Akatsuki cloud design hoodie from Naruto'},
-  {id:8,title:'COD Hoodie',price:650,cat:'hoodies',img:'products/hoodies/cod.jpeg',description:'Call of Duty inspired gaming hoodie'},
-  {id:9,title:'One Piece Bros Hoodie',price:650,cat:'hoodies',img:'products/hoodies/one_piece_bros.jpeg',description:'Luffy, Ace & Sabo hoodie for all One Piece fans'},
-  {id:10,title:'Tokyo Revengers Hoodie',price:650,cat:'hoodies',img:'products/hoodies/tokyo_revengers.jpeg',description:'Tokyo Revengers themed hoodie'},
-  {id:11,title:'Batman Hoodie',price:650,cat:'hoodies',img:'products/hoodies/batman.jpeg',description:'Dark knight inspired Batman hoodie'},
-  {id:12,title:'Gojo Hoodie',price:650,cat:'hoodies',img:'products/hoodies/gojo.jpeg',description:'Jujutsu Kaisen fan favorite hoodie with Gojo design'},
-  {id:13,title:'Satoru Gojo Hoodie',price:650,cat:'hoodies',img:'products/hoodies/satoru_gojo.jpeg',description:'Another Gojo styled hoodie for the true fans'},
-  {id:14,title:'Straw Hats Hoodie',price:650,cat:'hoodies',img:'products/hoodies/straw_hats.jpeg',description:'One Piece Straw Hats logo crew hoodie'},
-  {id:15,title:'Ronaldo CR7 Hoodie',price:650,cat:'hoodies',img:'products/hoodies/ronaldo_cr7.jpeg',description:'Premium hoodie featuring Cristiano Ronaldo\'s iconic CR7 branding'},
-  {id:16,title:'Ronaldo Real Madrid Hoodie',price:700,cat:'hoodies',img:'products/hoodies/cr7_rm.jpeg',description:'Official Real Madrid inspired hoodie celebrating Ronaldo\'s legacy'},
-  {id:17,title:'Messi Hoodie',price:650,cat:'hoodies',img:'products/hoodies/messi.jpeg',description:'Stylish hoodie featuring Lionel Messi\'s signature style'},
-  {id:18,title:'Protein Powder',price:1200,cat:'supplements',img:'products/supplements/protein_powder.jpeg',description:'No Pain, No Gain.'},
-  {id:19,title:'Honey (1kg)',price:200,cat:'supplements',img:'products/supplements/honey_1kg.jpeg',description:'The food of Prophets'},
-  {id:20,title:'Vita-C Powder',price:350,cat:'supplements',img:'products/supplements/vitc_powder.jpeg',description:'Who even needs Oranges?'},
-  {id:21,title:'PRODUCT UNAVAILABLE',price:69,cat:'other',img:'products/other/unavail.jpeg',description:'PRODUCT UNAVAILABLE TEST FOR SERVER, IGNORE'}
-];
-
-const grid = document.getElementById('grid');
-const searchInput = document.getElementById('searchInput');
-const searchBtn = document.getElementById('searchBtn');
-const clearBtn = document.getElementById('clearBtn');
-const cartBtn = document.getElementById('cartBtn');
-const cartCount = document.getElementById('cartCount');
-const cartModal = document.getElementById('cartModal');
-const cartItems = document.getElementById('cartItems');
-const cartTotal = document.getElementById('cartTotal');
-const closeCart = document.getElementById('closeCart');
-const clearCartBtn = document.getElementById('clearCartBtn');
-const imgLightbox = document.getElementById('imgLightbox');
-const lightboxImg = document.getElementById('lightboxImg');
-setImageFallback(lightboxImg);
-const closeLightbox = document.getElementById('closeLightbox');
-
-const addNotif = document.getElementById('addNotif');
-const addNotifMsg = document.getElementById('addNotifMsg');
-const addNotifThumb = document.getElementById('addNotifThumb');
-const undoAddBtn = document.getElementById('undoAddBtn');
-const closeAddNotifBtn = document.getElementById('closeAddNotif');
-
-const hideTooltipBtn = document.getElementById('hideTooltipBtn');
-const hintTooltip = document.getElementById('hintTooltip');
-const loadingSpinner = document.getElementById('loadingSpinner');
-
-let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-const batchSize = 6;
-let filteredProducts = products.slice();
-let currentIndex = 0;
-let loading = false;
-let lastAdded = null;
-let notifTimer = null;
-
-/* ========== LAZY LOAD OBSERVER ========== */
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting && !loading) {
-      observer.unobserve(entry.target);
-      renderNextBatch();
-    }
-  });
-}, { root: null, rootMargin: '300px', threshold: 0.1 });
-
-/* ========== UTILS ========== */
-function money(n){return `R${n.toFixed(2)}`;}
-function saveCart(){localStorage.setItem('cart', JSON.stringify(cart));}
-
-/* ========== BACKGROUND INTERACTION BLOCKER & FOCUS TRAP (unchanged) ========= */
-(function(){
-  function isInsideAny(target, list) {
-    return list.some(el => el && (el === target || el.contains(target)));
-  }
-
-  function modalKeyHandler(e) {
-    if (e.key !== 'Tab') return;
-    const activeModal = document.querySelector('.cart-modal.active, .lightbox.active');
-    if (!activeModal) return;
-    const focusables = Array.from(activeModal.querySelectorAll('a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'))
-      .filter(el => !el.disabled && el.offsetParent !== null);
-    if (!focusables.length) { e.preventDefault(); return; }
-    const first = focusables[0], last = focusables[focusables.length - 1];
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault(); last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault(); first.focus();
-    }
-  }
-
-  window.disableBackgroundInteraction = function(allowedElements = []) {
-    document.body.classList.add('modal-open');
-    document.querySelectorAll('header, main').forEach(el => {
-      el.setAttribute('aria-hidden', 'true');
-      try { el.inert = true; } catch(e) {}
-      el.style.pointerEvents = 'none';
-    });
-
-    const prevent = function(e) {
-      const tgt = e.target;
-      if (isInsideAny(tgt, allowedElements)) return;
-      e.preventDefault();
-    };
-    document._modalPrevent = prevent;
-    document.addEventListener('touchmove', prevent, { passive: false });
-    document.addEventListener('wheel', prevent, { passive: false });
-    document.addEventListener('keydown', modalKeyHandler, true);
-  };
-
-  window.enableBackgroundInteraction = function() {
-    document.body.classList.remove('modal-open');
-    document.querySelectorAll('header, main').forEach(el => {
-      el.removeAttribute('aria-hidden');
-      try { el.inert = false; } catch(e) {}
-      el.style.pointerEvents = '';
-    });
-
-    if (document._modalPrevent) {
-      document.removeEventListener('touchmove', document._modalPrevent, { passive: false });
-      document.removeEventListener('wheel', document._modalPrevent, { passive: false });
-      document._modalPrevent = null;
-    }
-    document.removeEventListener('keydown', modalKeyHandler, true);
-  };
-
-  window._isInsideAny = isInsideAny;
-})();
-
-/* ========== CART DISPLAY & NOTIFS ========== */
-function updateCartDisplay(){
-  const totalQty = cart.reduce((a,c)=>a+c.qty,0);
-  cartCount.textContent = totalQty;
-  cartItems.innerHTML = '';
-  if(!cart.length){
-    cartItems.innerHTML = '<p style="color:#aaa">Cart is empty</p>';
-  } else {
-    cart.forEach(item=>{
-      const row = document.createElement('div');
-      row.className = 'cart-item';
-      row.style.display='flex'; row.style.gap='12px'; row.style.alignItems='center'; row.style.background='#222'; row.style.padding='8px'; row.style.borderRadius='8px';
-      row.innerHTML = `
-        <img src="${item.img}" alt="N/A" style="width:60px;height:60px;object-fit:cover;border-radius:6px">
-        <div style="flex:1">
-          <div style="font-weight:700">${item.title}</div>
-          <div style="color:#aaa">${money(item.price)} × ${item.qty}</div>
-        </div>
-        <button class="remove-btn" aria-label="Remove ${item.title}" style="background:#ff2a2a;color:#fff;border:0;padding:6px 8px;border-radius:8px;cursor:pointer"><i class="fas fa-trash"></i></button>
-      `;
-      row.querySelector('.remove-btn').addEventListener('click',()=>{
-        cart = cart.filter(p=>p.id!==item.id); saveCart(); updateCartDisplay();
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const preloader = document.getElementById("preloader");
+        const minTime = 1000;
+        const start = Date.now();
+        window.addEventListener("load", () => {
+          const elapsed = Date.now() - start;
+          const remaining = Math.max(0, minTime - elapsed);
+          setTimeout(() => {
+            preloader.classList.add("hidden");
+            setTimeout(() => preloader.remove(), 600);
+          }, remaining);
+        });
       });
-      cartItems.appendChild(row);
-    });
-  }
-  cartTotal.textContent = money(cart.reduce((a,c)=>a + c.price*c.qty, 0));
-}
-
-function showAddNotification(p){
-  // addNotifThumb.src = p.img; addNotifThumb.alt = p.title;
-  addNotifThumb.src = p.img; addNotifThumb.alt = "N/A";
-  const ex = cart.find(i=>i.id===p.id); const qty = ex?ex.qty:1;
-  addNotifMsg.textContent = qty>1?`${p.title} x${qty} added to cart`:`${p.title} added to cart`;
-  addNotif.classList.remove('hiding'); addNotif.classList.add('visible');
-  cartCount.classList.remove('pop'); void cartCount.offsetWidth; cartCount.classList.add('pop');
-  lastAdded = {id:p.id,when:Date.now()};
-  if(notifTimer) clearTimeout(notifTimer);
-  notifTimer = setTimeout(()=>{
-    addNotif.classList.remove('visible'); addNotif.classList.add('hiding');
-    setTimeout(()=>addNotif.classList.remove('hiding'),320);
-    lastAdded=null; notifTimer=null;
-  },2000);
-}
-
-function addToCart(p){
-  const ex = cart.find(i=>i.id===p.id);
-  if(ex) ex.qty++; else cart.push({...p,qty:1});
-  saveCart(); updateCartDisplay();
-  showAddNotification(p);
-}
-
-/* clicking toast (except undo / close) opens cart */
-addNotif.addEventListener('click', (e) => {
-  // If clicked undo or close - ignore here
-  if (e.target.closest('#undoAddBtn') || e.target.closest('#closeAddNotif')) return;
-  // Open cart
-  openCartModal();
-});
-
-/* undo / close notif */
-undoAddBtn.addEventListener('click', (e)=>{
-  e.stopPropagation();
-  if(!lastAdded) return;
-  const idx = cart.findIndex(i=>i.id===lastAdded.id);
-  if(idx>-1){
-    if(cart[idx].qty>1) cart[idx].qty--; else cart.splice(idx,1);
-    saveCart(); updateCartDisplay();
-  }
-  if(notifTimer){clearTimeout(notifTimer); notifTimer=null;}
-  lastAdded=null; addNotif.classList.remove('visible'); addNotif.classList.add('hiding');
-  setTimeout(()=>addNotif.classList.remove('hiding'),320);
-});
-closeAddNotifBtn.addEventListener('click', (e)=>{
-  e.stopPropagation();
-  if(notifTimer){clearTimeout(notifTimer); notifTimer=null;}
-  lastAdded=null; addNotif.classList.remove('visible'); addNotif.classList.add('hiding');
-  setTimeout(()=>addNotif.classList.remove('hiding'),320);
-});
-
-  /* ========== IMAGE FALLBACK PLACEHOLDER ========== */
-function setImageFallback(img) {
-  img.addEventListener('error', () => {
-    if (!img.dataset.fallback) { 
-      img.dataset.fallback = "true"; // prevent loop
-      img.src = './assets/placeholder.png';
-    }
-  });
-}
-
-
-/* ========== CARD CREATION ========== */
-function createCard(p){
-  const card = document.createElement('article');
-  card.className = 'card';
-  const inner = document.createElement('div'); inner.className='card-inner';
-  const front = document.createElement('div'); front.className='card-front';
-  front.innerHTML = `
-    <div class="img-wrap"><img loading="lazy" src="${p.img}" alt="${p.title}"></div>
-    <div class="front-body">
-      <div class="product-title-front">${p.title}</div>
-      <div class="price-row">
-        <div class="price">${money(p.price)}</div>
-        <button class="add-btn" type="button" aria-label="Add ${p.title}"><i class="fas fa-plus"></i></button>
+    </script>
+    <div id="preloader">
+      <div class="loader"></div>
+    </div>
+    <!-- toast -->
+    <div id="addNotif" class="add-notif" role="status" aria-live="polite" aria-atomic="true">
+      <img id="addNotifThumb" class="product-thumb" src="" alt="">
+      <div id="addNotifMsg" class="msg">Product added to cart</div>
+      <button id="undoAddBtn" class="undo-btn" aria-label="Undo add">Undo</button>
+      <button id="closeAddNotif" class="close-btn" aria-label="Dismiss"><i class="fas fa-times"></i></button>
+    </div>
+    <!-- tooltip -->
+    <div class="hint-tooltip" id="hintTooltip" role="note" style="display:none;position:fixed;bottom:20px;left:20px;max-width:320px;z-index:1100;background:linear-gradient(180deg,rgba(26,26,26,.98),rgba(20,20,20,.98));padding:14px;border-radius:10px;border:1px solid rgba(10,170,255,.06);box-shadow:0 8px 22px rgba(0,0,0,.6)">
+      <div style="display:flex;align-items:center;gap:8px">
+        <i class="fas fa-info-circle" style="color:var(--accent)"></i>
+        <div>Click a product to flip the card and view details.</div>
+      </div>
+      <div style="text-align:right;margin-top:10px"><button id="hideTooltipBtn" style="background:var(--accent);border-radius:8px;padding:6px 10px;border:0;color:#012;font-weight:700">Do not show again</button></div>
+    </div>
+    <!-- Scroll to Top Button -->
+    <a id="scrollToTopBtn" href="#" role="button" aria-label="Scroll to top" tabindex="0"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+    <header>
+      <div class="top-row">
+        <div class="logo"><img src="assets/favicon.png" alt="logo"></div>
+        <div class="search-wrap">
+          <div class="search-box">
+            <input id="searchInput" type="text" placeholder="Search products..." aria-label="Search products">
+            <button id="clearBtn" type="button" aria-label="Clear search"><i class="fas fa-times"></i></button>
+          </div>
+          <button id="searchBtn" type="button" aria-label="Search" style="border-radius: 5px 25px 25px 5px;"><i class="fas fa-search"></i></button>
+        </div>
+        <div id="cartBtn" role="button" tabindex="0" aria-label="Shopping cart" style="position:relative">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cartCount">0</span>
+        </div>
+      </div>
+    </header>
+    <div class="cat-bar" role="tablist">
+      <button class="cat-btn active" data-cat="all" type="button">All</button>
+      <button class="cat-btn" data-cat="hoodies" type="button">Hoodies</button>
+      <button class="cat-btn" data-cat="supplements" type="button">Supplements</button>
+      <button class="cat-btn" data-cat="other" type="button">Other</button>
+    </div>
+    <main>
+      <section id="grid" aria-live="polite" aria-busy="false"></section>
+      <div id="loadingSpinner" style="display:none"><i class="fas fa-spinner fa-pulse fa-2x"></i></div>
+    </main>
+    <div id="cartModal" class="cart-modal" aria-hidden="true">
+      <div class="cart-content" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+        <button id="closeCart" type="button" aria-label="Close cart"><i class="fas fa-times"></i></button>
+        <h2 id="cartTitle">Your Cart</h2>
+        <div style="color:var(--muted);margin-bottom:16px">Screenshot this cart, and <a href="https://wa.me/+27713468567" target="_blank" rel="noopener noreferrer" style="color:rgb(4,202,4)">message +27 67 534 2232</a> on WhatsApp to order.</div>
+        <div id="cartItems" class="cart-items"></div>
+        <div style="border-top:1px solid #333;padding-top:12px;display:flex;justify-content:space-between;align-items:center">
+          <button id="clearCartBtn" type="button" style="background:#ff2a2a;color:#fff;border-radius:10px;padding:8px 12px;border:0">Clear</button>
+          <div><strong>Total:</strong> <span id="cartTotal">R0.00</span></div>
+        </div>
       </div>
     </div>
-  `;
-
-  // attach fallback handler
-const frontImg = front.querySelector('img');
-setImageFallback(frontImg);
-
-
-  const back = document.createElement('div'); back.className='card-back';
-  back.innerHTML = `
-    <h3 style="margin:0">${p.title}</h3>
-    <p style="margin:0;color:#bcd9f2">${p.description}</p>
-    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-      <button class="view-img-btn" type="button" data-img="${p.img}"><i class="fas fa-image" style="padding-right: 3px;"></i> View</button>
-      <button class="add-btn" type="button" aria-label="Add ${p.title} (back)"><i class="fas fa-plus" style="padding-right: 3px;"></i> Add</button>
+    <div id="imgLightbox" class="lightbox" aria-hidden="true" tabindex="-1">
+      <button id="closeLightbox" type="button" aria-label="Close image" style="position:absolute;right:18px;top:18px;background:transparent;border:0;color:#fff;font-size:22px; cursor: pointer;"><i class="fas fa-times"></i></button>
+      <img id="lightboxImg" alt="" style="max-width:95%;max-height:85%;border-radius:8px;touch-action:manipulation">
     </div>
-  `;
-  inner.appendChild(front); inner.appendChild(back); card.appendChild(inner);
-
-  // click-to-flip (ignore clicks on buttons)
-  card.addEventListener('click', e=>{
-    if(e.target.closest('.add-btn') || e.target.closest('.view-img-btn')) return;
-    const other = document.querySelector('.card.flipped');
-    if(other && other!==card) other.classList.remove('flipped');
-    card.classList.toggle('flipped');
-  });
-
-  // front add
-  front.querySelector('.add-btn').addEventListener('click', e=>{ e.stopPropagation(); addToCart(p); });
-
-  // back add(s)
-  back.querySelectorAll('.add-btn').forEach(b=>{
-    b.addEventListener('click', e=>{ e.stopPropagation(); addToCart(p); });
-  });
-
-  // view image - open lightbox and disable background interaction
-  back.querySelector('.view-img-btn').addEventListener('click', e=>{
-    e.stopPropagation();
-    // open lightbox
-    lightboxOpen(p.img);
-  });
-
-  // keyboard support
-  card.tabIndex = 0;
-  card.addEventListener('keydown', e=>{
-    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); const other = document.querySelector('.card.flipped'); if(other && other!==card) other.classList.remove('flipped'); card.classList.toggle('flipped'); }
-  });
-
-  return card;
-}
-
-/* ========== RENDER BATCHING ========== */
-function showSpinner(){ loadingSpinner.style.display='block' }
-function hideSpinner(){ loadingSpinner.style.display='none' }
-
-function observeLastCard(){
-  const cards = grid.querySelectorAll('.card');
-  const last = cards[cards.length-1];
-  if(last) observer.observe(last);
-}
-
-function renderNextBatch(){
-  if(loading) return;
-  if(currentIndex >= filteredProducts.length){ observer.disconnect(); return; }
-  loading=true; showSpinner();
-  setTimeout(()=>{
-    const slice = filteredProducts.slice(currentIndex, currentIndex + batchSize);
-    slice.forEach((p,i)=>{
-      const c = createCard(p);
-      c.classList.add('pop-in');
-      c.style.animationDelay = `${i*60}ms`;
-      c.style.opacity='1';
-      grid.appendChild(c);
-    });
-    currentIndex += slice.length; loading=false; hideSpinner();
-    if(currentIndex >= filteredProducts.length) observer.disconnect(); else observeLastCard();
-  }, 220);
-}
-
-/* ========== FILTERS (SEARCH TITLE ONLY) ========= */
-function filterAndRender(){
-  const q = (searchInput.value||'').trim().toLowerCase();
-  const cat = document.querySelector('.cat-btn.active').dataset.cat;
-  filteredProducts = products.filter(p=>{
-    const matchCat = (cat === 'all') || p.cat === cat;
-    // SEARCH ONLY TITLES now (user requested): only title is checked
-    const matchQ = !q || p.title.toLowerCase().includes(q);
-    return matchCat && matchQ;
-  });
-  currentIndex = 0; grid.innerHTML='';
-  if(!filteredProducts.length){ grid.innerHTML = '<div class="empty-state">No products found</div>'; hideSpinner(); observer.disconnect(); return; }
-  renderNextBatch();
-}
-
-/* ========== INIT & EVENTS ========= */
-window.addEventListener('DOMContentLoaded', ()=>{
-  if(!localStorage.getItem('hideHint')) hintTooltip.style.display='block';
-  filterAndRender(); updateCartDisplay();
-});
-
-// hide hint
-hideTooltipBtn && hideTooltipBtn.addEventListener && hideTooltipBtn.addEventListener('click', ()=>{
-  localStorage.setItem('hideHint','1'); hintTooltip.style.display='none';
-});
-
-// search UI (clear button behavior)
-searchInput.addEventListener('input', ()=>{ filterAndRender(); clearBtn.style.display = searchInput.value ? 'flex' : 'none'; });
-searchBtn.addEventListener('click', ()=>{ filterAndRender(); searchInput.focus(); });
-clearBtn.addEventListener('click', ()=>{ searchInput.value=''; filterAndRender(); clearBtn.style.display='none'; searchInput.focus(); });
-
-// category buttons
-document.querySelectorAll('.cat-btn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{ document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); filterAndRender() });
-  btn.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); btn.click(); }});
-});
-
-/* ========== CART MODAL OPEN/CLOSE (uses disable/enableBackgroundInteraction) ========== */
-function openCartModal(){
-  cartModal.classList.add('active'); cartModal.setAttribute('aria-hidden','false');
-  const allowed = [cartModal.querySelector('.cart-content')];
-  disableBackgroundInteraction(allowed);
-  setTimeout(()=> closeCart.focus(),50);
-}
-cartBtn.addEventListener('click', ()=> openCartModal());
-closeCart.addEventListener('click', ()=>{ 
-  cartModal.classList.remove('active'); cartModal.setAttribute('aria-hidden','true'); 
-  enableBackgroundInteraction(); 
-  cartBtn.focus();
-});
-cartModal.addEventListener('click', e=>{ if(e.target === cartModal) closeCart.click() });
-clearCartBtn.addEventListener('click', ()=>{ if(cart.length && confirm('Clear cart?')){ cart=[]; saveCart(); updateCartDisplay(); } });
-
-/* ========== IMAGE LIGHTBOX: OPEN / CLOSE / ZOOM / PAN / SWIPE UP+DOWN TO DISMISS ========= */
-
-/*
-  Features implemented:
-  - openLightbox(url): opens and disables background
-  - Dismiss by tapping close, pressing ESC, clicking background
-  - Dismiss by swipe down OR swipe up (mobile)
-  - Pinch-to-zoom (2-finger)
-  - Double-tap to toggle zoom (centered around tap)
-  - Pan when zoomed
-  - Wheel zoom (desktop)
-  - Reset transforms on close
-*/
-
-let lbState = {
-  active: false,
-  scale: 1,
-  minScale: 1,
-  maxScale: 5,
-  startTouches: null,
-  lastDist: null,
-  panX: 0,
-  panY: 0,
-  startPanX: 0,
-  startPanY: 0,
-  lastTap: 0,
-  doubleTapThreshold: 300,
-  lastTapPos: null,
-  touchStartY: 0,
-  touchStartX: 0,
-  moved: false
-};
-
-function lightboxOpen(url){
-  lightboxImg.src = url;
-  imgLightbox.classList.add('active');
-  imgLightbox.setAttribute('aria-hidden','false');
-  disableBackgroundInteraction([imgLightbox, lightboxImg]);
-  lbState.active = true; lbState.scale = 1; lbState.panX = 0; lbState.panY = 0;
-  lightboxImg.style.transform = '';
-  imgLightbox.style.background = '';
-  setTimeout(()=> closeLightbox.focus(), 50);
-}
-
-/* Close & reset */
-function lightboxClose(){
-  imgLightbox.classList.remove('active');
-  imgLightbox.setAttribute('aria-hidden','true');
-  enableBackgroundInteraction();
-  // reset transform and internal state
-  lbState.scale = 1; lbState.panX = 0; lbState.panY = 0; lbState.lastDist = null;
-  lightboxImg.style.transition = ''; lightboxImg.style.transform = '';
-  imgLightbox.style.transition = '';
-  lbState.active = false;
-}
-
-/* click background closes */
-imgLightbox.addEventListener('click', e=>{
-  if(e.target === imgLightbox){
-    lightboxClose();
-  }
-});
-
-closeLightbox.addEventListener('click', ()=>{ lightboxClose(); });
-
-window.addEventListener('keydown', e=>{
-  if(e.key === 'Escape'){
-    if (cartModal.classList.contains('active')) {
-      closeCart.click();
-    }
-    if (imgLightbox.classList.contains('active')) {
-      lightboxClose();
-    }
-  }
-});
-
-/* helpers: distance between two touches */
-function dist(t1, t2){
-  const dx = t2.clientX - t1.clientX;
-  const dy = t2.clientY - t1.clientY;
-  return Math.hypot(dx, dy);
-}
-function midpoint(t1, t2){
-  return { x: (t1.clientX + t2.clientX)/2, y: (t1.clientY + t2.clientY)/2 };
-}
-
-/* touch handlers on lightbox image container */
-(function(){
-  let ongoingTouch = false;
-
-  imgLightbox.addEventListener('touchstart', function(e){
-    if(!imgLightbox.classList.contains('active')) return;
-    if(e.touches.length === 1){
-      lbState.touchStartY = e.touches[0].clientY;
-      lbState.touchStartX = e.touches[0].clientX;
-      lbState.moved = false;
-    }
-    if(e.touches.length === 2){
-      // start pinch
-      lbState.lastDist = dist(e.touches[0], e.touches[1]);
-      lbState.startTouches = [e.touches[0], e.touches[1]];
-      // midpoint for focal point (not used for complicated transform anchor but good for double-tap centering)
-      lbState.mid = midpoint(e.touches[0], e.touches[1]);
-      // stop any transitions
-      lightboxImg.style.transition = '';
-      imgLightbox.style.transition = '';
-    }
-    ongoingTouch = true;
-  }, { passive: false });
-
-  imgLightbox.addEventListener('touchmove', function(e){
-    if(!ongoingTouch || !imgLightbox.classList.contains('active')) return;
-    if(e.touches.length === 2){
-      e.preventDefault();
-      const newDist = dist(e.touches[0], e.touches[1]);
-      const scaleDelta = newDist / (lbState.lastDist || newDist);
-      let newScale = lbState.scale * scaleDelta;
-      newScale = Math.max(lbState.minScale, Math.min(lbState.maxScale, newScale));
-      // compute scale relative to center: simple approach that preserves current pan
-      lbState.scale = newScale;
-      lbState.lastDist = newDist;
-      applyTransform();
-    } else if(e.touches.length === 1){
-      const t = e.touches[0];
-      const dy = t.clientY - lbState.touchStartY;
-      const dx = t.clientX - lbState.touchStartX;
-      // if zoomed, allow panning
-      if(lbState.scale > 1.02){
-        e.preventDefault();
-        lbState.panX = (lbState.startPanX || 0) + (t.clientX - (lbState._panStartX || t.clientX));
-        lbState.panY = (lbState.startPanY || 0) + (t.clientY - (lbState._panStartY || t.clientY));
-        // On first pan start store origin:
-        if(lbState._panStartX === undefined){
-          lbState._panStartX = t.clientX;
-          lbState._panStartY = t.clientY;
-          lbState.startPanX = lbState.panX;
-          lbState.startPanY = lbState.panY;
+    <script>
+      /* ========== DATA & REFS ========= */
+      const products = [
+        {id:1,title:'Kakashi Hoodie',price:650,cat:'hoodies',img:'products/hoodies/kakashi.jpeg',description:"Premium cotton-blend hoodie featuring Kakashi's fanart"},
+        {id:2,title:'BMW Hoodie',price:650,cat:'hoodies',img:'products/hoodies/bmw.jpeg',description:'Classic "I need Money for BMW" hoodie'},
+        {id:3,title:'911 GT3 RS Hoodie',price:650,cat:'hoodies',img:'products/hoodies/911_gt3_rs.jpeg',description:'Sleek hoodie with the Porsche 911 GT3 RS'},
+        {id:4,title:'BMW M Hoodie',price:650,cat:'hoodies',img:'products/hoodies/bmw_m.jpeg',description:'Stylish BMW M series inspired hoodie'},
+        {id:5,title:'Monkey D. Luffy Hoodie',price:650,cat:'hoodies',img:'products/hoodies/monkey_d_luffy.jpeg',description:'One Piece fan favorite hoodie with Luffy print'},
+        {id:6,title:'Tokyo Ghoul Hoodie',price:650,cat:'hoodies',img:'products/hoodies/tokyo_ghoul.jpeg',description:'Dark and edgy Tokyo Ghoul themed hoodie'},
+        {id:7,title:'Akatsuki Hoodie',price:750,cat:'hoodies',img:'products/hoodies/akatsuki.jpeg',description:'Iconic Akatsuki cloud design hoodie from Naruto'},
+        {id:8,title:'COD Hoodie',price:650,cat:'hoodies',img:'products/hoodies/cod.jpeg',description:'Call of Duty inspired gaming hoodie'},
+        {id:9,title:'One Piece Bros Hoodie',price:650,cat:'hoodies',img:'products/hoodies/one_piece_bros.jpeg',description:'Luffy, Ace & Sabo hoodie for all One Piece fans'},
+        {id:10,title:'Tokyo Revengers Hoodie',price:650,cat:'hoodies',img:'products/hoodies/tokyo_revengers.jpeg',description:'Tokyo Revengers themed hoodie'},
+        {id:11,title:'Batman Hoodie',price:650,cat:'hoodies',img:'products/hoodies/batman.jpeg',description:'Dark knight inspired Batman hoodie'},
+        {id:12,title:'Gojo Hoodie',price:650,cat:'hoodies',img:'products/hoodies/gojo.jpeg',description:'Jujutsu Kaisen fan favorite hoodie with Gojo design'},
+        {id:13,title:'Satoru Gojo Hoodie',price:650,cat:'hoodies',img:'products/hoodies/satoru_gojo.jpeg',description:'Another Gojo styled hoodie for the true fans'},
+        {id:14,title:'Straw Hats Hoodie',price:650,cat:'hoodies',img:'products/hoodies/straw_hats.jpeg',description:'One Piece Straw Hats logo crew hoodie'},
+        {id:15,title:'Ronaldo CR7 Hoodie',price:650,cat:'hoodies',img:'products/hoodies/ronaldo_cr7.jpeg',description:'Premium hoodie featuring Cristiano Ronaldo\'s iconic CR7 branding'},
+        {id:16,title:'Ronaldo Real Madrid Hoodie',price:700,cat:'hoodies',img:'products/hoodies/cr7_rm.jpeg',description:'Official Real Madrid inspired hoodie celebrating Ronaldo\'s legacy'},
+        {id:17,title:'Messi Hoodie',price:650,cat:'hoodies',img:'products/hoodies/messi.jpeg',description:'Stylish hoodie featuring Lionel Messi\'s signature style'},
+        {id:18,title:'Honey (1kg)',price:200,cat:'supplements',img:'products/supplements/honey_1kg.jpeg',description:'The classic homemade honey, Liquid Gold - a sub-brand of Drift Threads'},
+        {id:19,title:'PRODUCT UNAVAILABLE',price:69,cat:'other',img:'products/other/unavail.jpeg',description:'PRODUCT UNAVAILABLE TEST FOR SERVER, IGNORE'}
+      ];
+      
+      const grid = document.getElementById('grid');
+      const searchInput = document.getElementById('searchInput');
+      const searchBtn = document.getElementById('searchBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const cartBtn = document.getElementById('cartBtn');
+      const cartCount = document.getElementById('cartCount');
+      const cartModal = document.getElementById('cartModal');
+      const cartItems = document.getElementById('cartItems');
+      const cartTotal = document.getElementById('cartTotal');
+      const closeCart = document.getElementById('closeCart');
+      const clearCartBtn = document.getElementById('clearCartBtn');
+      const imgLightbox = document.getElementById('imgLightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      setImageFallback(lightboxImg);
+      const closeLightbox = document.getElementById('closeLightbox');
+      
+      const addNotif = document.getElementById('addNotif');
+      const addNotifMsg = document.getElementById('addNotifMsg');
+      const addNotifThumb = document.getElementById('addNotifThumb');
+      const undoAddBtn = document.getElementById('undoAddBtn');
+      const closeAddNotifBtn = document.getElementById('closeAddNotif');
+      
+      const hideTooltipBtn = document.getElementById('hideTooltipBtn');
+      const hintTooltip = document.getElementById('hintTooltip');
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      
+      let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const batchSize = 6;
+      let filteredProducts = products.slice();
+      let currentIndex = 0;
+      let loading = false;
+      let lastAdded = null;
+      let notifTimer = null;
+      
+      /* ========== LAZY LOAD OBSERVER ========== */
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !loading) {
+            observer.unobserve(entry.target);
+            renderNextBatch();
+          }
+        });
+      }, { root: null, rootMargin: '300px', threshold: 0.1 });
+      
+      /* ========== UTILS ========== */
+      function money(n){return `R${n.toFixed(2)}`;}
+      function saveCart(){localStorage.setItem('cart', JSON.stringify(cart));}
+      
+      /* ========== BACKGROUND INTERACTION BLOCKER & FOCUS TRAP (unchanged) ========= */
+      (function(){
+        function isInsideAny(target, list) {
+          return list.some(el => el && (el === target || el.contains(target)));
         }
-        applyTransform();
-        lbState.moved = true;
-      } else {
-        // handle swipe up/down dismissal when not zoomed
-        if(Math.abs(dy) > 8 && Math.abs(dy) > Math.abs(dx)){
-          lbState.moved = true;
-          // visually translate image following finger
-          lightboxImg.style.transition = 'transform 0s';
-          const tempScale = Math.max(0.94, 1 - Math.abs(dy)/2400);
-          lightboxImg.style.transform = `translateY(${dy}px) scale(${tempScale})`;
-          imgLightbox.style.background = `rgba(0,0,0,${Math.max(0.25, 0.85 - Math.abs(dy)/800)})`;
+      
+        function modalKeyHandler(e) {
+          if (e.key !== 'Tab') return;
+          const activeModal = document.querySelector('.cart-modal.active, .lightbox.active');
+          if (!activeModal) return;
+          const focusables = Array.from(activeModal.querySelectorAll('a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'))
+            .filter(el => !el.disabled && el.offsetParent !== null);
+          if (!focusables.length) { e.preventDefault(); return; }
+          const first = focusables[0], last = focusables[focusables.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault(); last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault(); first.focus();
+          }
         }
-      }
-    }
-  }, { passive: false });
-
-  imgLightbox.addEventListener('touchend', function(e){
-    if(!ongoingTouch) return;
-    // If a pinch ended, finalize scale and reset lastDist
-    if(e.touches.length < 2) lbState.lastDist = null;
-    // If it was a pan (zoomed), commit pan start values
-    if(lbState.scale > 1.02){
-      // Commit pan starting origin for the next gesture and ensure consistent values
-      lbState.startPanX = lbState.panX;
-      lbState.startPanY = lbState.panY;
-      lbState._panStartX = undefined; lbState._panStartY = undefined;
-      constrainPan();
-      applyTransformWithTransition();
-    } else {
-      // If not zoomed and moved finger vertically enough -> dismiss either up or down
-      if(lbState.moved){
-        // compute final dy from last touch event if available
-        const changed = (e.changedTouches && e.changedTouches[0]) || {};
-        const endY = changed.clientY || lbState.touchStartY;
-        const dy = endY - lbState.touchStartY;
-        if(dy > 100 && Math.abs(dy) > 30){ // swipe down
-          // animate out
-          lightboxImg.style.transition = 'transform 220ms cubic-bezier(.22,.9,.27,1)';
-          lightboxImg.style.transform = `translateY(120px) scale(0.92)`;
-          imgLightbox.style.transition = 'background 220ms';
-          imgLightbox.style.background = `rgba(0,0,0,0.0)`;
-          setTimeout(()=> lightboxClose(), 220);
-        } else if(dy < -100 && Math.abs(dy) > 30){ // swipe up
-          lightboxImg.style.transition = 'transform 220ms cubic-bezier(.22,.9,.27,1)';
-          lightboxImg.style.transform = `translateY(-120px) scale(0.92)`;
-          imgLightbox.style.transition = 'background 220ms';
-          imgLightbox.style.background = `rgba(0,0,0,0.0)`;
-          setTimeout(()=> lightboxClose(), 220);
+      
+        window.disableBackgroundInteraction = function(allowedElements = []) {
+          document.body.classList.add('modal-open');
+          document.querySelectorAll('header, main').forEach(el => {
+            el.setAttribute('aria-hidden', 'true');
+            try { el.inert = true; } catch(e) {}
+            el.style.pointerEvents = 'none';
+          });
+      
+          const prevent = function(e) {
+            const tgt = e.target;
+            if (isInsideAny(tgt, allowedElements)) return;
+            e.preventDefault();
+          };
+          document._modalPrevent = prevent;
+          document.addEventListener('touchmove', prevent, { passive: false });
+          document.addEventListener('wheel', prevent, { passive: false });
+          document.addEventListener('keydown', modalKeyHandler, true);
+        };
+      
+        window.enableBackgroundInteraction = function() {
+          document.body.classList.remove('modal-open');
+          document.querySelectorAll('header, main').forEach(el => {
+            el.removeAttribute('aria-hidden');
+            try { el.inert = false; } catch(e) {}
+            el.style.pointerEvents = '';
+          });
+      
+          if (document._modalPrevent) {
+            document.removeEventListener('touchmove', document._modalPrevent, { passive: false });
+            document.removeEventListener('wheel', document._modalPrevent, { passive: false });
+            document._modalPrevent = null;
+          }
+          document.removeEventListener('keydown', modalKeyHandler, true);
+        };
+      
+        window._isInsideAny = isInsideAny;
+      })();
+      
+      /* ========== CART DISPLAY & NOTIFS ========== */
+      function updateCartDisplay(){
+        const totalQty = cart.reduce((a,c)=>a+c.qty,0);
+        cartCount.textContent = totalQty;
+        cartItems.innerHTML = '';
+        if(!cart.length){
+          cartItems.innerHTML = '<p style="color:#aaa">Cart is empty</p>';
         } else {
-          // revert to normal
-          lightboxImg.style.transition = 'transform 220ms cubic-bezier(.22,.9,.27,1)';
-          lightboxImg.style.transform = '';
-          imgLightbox.style.transition = 'background 220ms';
-          imgLightbox.style.background = '';
-          setTimeout(()=> { lightboxImg.style.transition=''; imgLightbox.style.transition=''; }, 260);
+          cart.forEach(item=>{
+            const row = document.createElement('div');
+            row.className = 'cart-item';
+            row.style.display='flex'; row.style.gap='12px'; row.style.alignItems='center'; row.style.background='#222'; row.style.padding='8px'; row.style.borderRadius='8px';
+            row.innerHTML = `
+              <img src="${item.img}" alt="N/A" style="width:60px;height:60px;object-fit:cover;border-radius:6px">
+              <div style="flex:1">
+                <div style="font-weight:700">${item.title}</div>
+                <div style="color:#aaa">${money(item.price)} × ${item.qty}</div>
+              </div>
+              <button class="remove-btn" aria-label="Remove ${item.title}" style="background:#ff2a2a;color:#fff;border:0;padding:6px 8px;border-radius:8px;cursor:pointer"><i class="fas fa-trash"></i></button>
+            `;
+            row.querySelector('.remove-btn').addEventListener('click',()=>{
+              cart = cart.filter(p=>p.id!==item.id); saveCart(); updateCartDisplay();
+            });
+            cartItems.appendChild(row);
+          });
         }
+        cartTotal.textContent = money(cart.reduce((a,c)=>a + c.price*c.qty, 0));
       }
-    }
-
-    // Double tap detection for toggling zoom (we detect based on recent tap)
-    // Only if it was a quick tap (not a move)
-    const now = Date.now();
-    const touch = (e.changedTouches && e.changedTouches[0]);
-    if(touch && !lbState.moved){
-      const last = lbState.lastTap || 0;
-      const lapse = now - last;
-      // coordinate proximity check
-      const lastPos = lbState.lastTapPos;
-      const closeEnough = lastPos ? (Math.hypot(touch.clientX-lastPos.x, touch.clientY-lastPos.y) < 40) : true;
-      if(lapse < lbState.doubleTapThreshold && closeEnough){
-        // double tap: toggle zoom
-        const doubleScale = 2.5;
-        if(lbState.scale > 1.1){
-          // reset
-          lbState.scale = 1;
-          lbState.panX = 0; lbState.panY = 0;
-        } else {
-          // zoom in centered around tap point: compute rough pan to center the tapped point
+      
+      function showAddNotification(p){
+        // addNotifThumb.src = p.img; addNotifThumb.alt = p.title;
+        addNotifThumb.src = p.img; addNotifThumb.alt = "N/A";
+        const ex = cart.find(i=>i.id===p.id); const qty = ex?ex.qty:1;
+        addNotifMsg.textContent = qty>1?`${p.title} x${qty} added to cart`:`${p.title} added to cart`;
+        addNotif.classList.remove('hiding'); addNotif.classList.add('visible');
+        cartCount.classList.remove('pop'); void cartCount.offsetWidth; cartCount.classList.add('pop');
+        lastAdded = {id:p.id,when:Date.now()};
+        if(notifTimer) clearTimeout(notifTimer);
+        notifTimer = setTimeout(()=>{
+          addNotif.classList.remove('visible'); addNotif.classList.add('hiding');
+          setTimeout(()=>addNotif.classList.remove('hiding'),320);
+          lastAdded=null; notifTimer=null;
+        },2000);
+      }
+      
+      function addToCart(p){
+        const ex = cart.find(i=>i.id===p.id);
+        if(ex) ex.qty++; else cart.push({...p,qty:1});
+        saveCart(); updateCartDisplay();
+        showAddNotification(p);
+      }
+      
+      /* clicking toast (except undo / close) opens cart */
+      addNotif.addEventListener('click', (e) => {
+        // If clicked undo or close - ignore here
+        if (e.target.closest('#undoAddBtn') || e.target.closest('#closeAddNotif')) return;
+        // Open cart
+        openCartModal();
+      });
+      
+      /* undo / close notif */
+      undoAddBtn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        if(!lastAdded) return;
+        const idx = cart.findIndex(i=>i.id===lastAdded.id);
+        if(idx>-1){
+          if(cart[idx].qty>1) cart[idx].qty--; else cart.splice(idx,1);
+          saveCart(); updateCartDisplay();
+        }
+        if(notifTimer){clearTimeout(notifTimer); notifTimer=null;}
+        lastAdded=null; addNotif.classList.remove('visible'); addNotif.classList.add('hiding');
+        setTimeout(()=>addNotif.classList.remove('hiding'),320);
+      });
+      closeAddNotifBtn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        if(notifTimer){clearTimeout(notifTimer); notifTimer=null;}
+        lastAdded=null; addNotif.classList.remove('visible'); addNotif.classList.add('hiding');
+        setTimeout(()=>addNotif.classList.remove('hiding'),320);
+      });
+      
+        /* ========== IMAGE FALLBACK PLACEHOLDER ========== */
+      function setImageFallback(img) {
+        img.addEventListener('error', () => {
+          if (!img.dataset.fallback) { 
+            img.dataset.fallback = "true"; // prevent loop
+            img.src = './assets/placeholder.png';
+          }
+        });
+      }
+      
+      
+      /* ========== CARD CREATION ========== */
+      function createCard(p){
+        const card = document.createElement('article');
+        card.className = 'card';
+        const inner = document.createElement('div'); inner.className='card-inner';
+        const front = document.createElement('div'); front.className='card-front';
+        front.innerHTML = `
+          <div class="img-wrap"><img loading="lazy" src="${p.img}" alt="${p.title}"></div>
+          <div class="front-body">
+            <div class="product-title-front">${p.title}</div>
+            <div class="price-row">
+              <div class="price">${money(p.price)}</div>
+              <button class="add-btn" type="button" aria-label="Add ${p.title}"><i class="fas fa-plus"></i></button>
+            </div>
+          </div>
+        `;
+      
+        // attach fallback handler
+      const frontImg = front.querySelector('img');
+      setImageFallback(frontImg);
+      
+      
+        const back = document.createElement('div'); back.className='card-back';
+        back.innerHTML = `
+          <h3 style="margin:0">${p.title}</h3>
+          <p style="margin:0;color:#bcd9f2">${p.description}</p>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+            <button class="view-img-btn" type="button" data-img="${p.img}"><i class="fas fa-image" style="padding-right: 3px;"></i> View</button>
+            <button class="add-btn" type="button" aria-label="Add ${p.title} (back)"><i class="fas fa-plus" style="padding-right: 3px;"></i> Add</button>
+          </div>
+        `;
+        inner.appendChild(front); inner.appendChild(back); card.appendChild(inner);
+      
+        // click-to-flip (ignore clicks on buttons)
+        card.addEventListener('click', e=>{
+          if(e.target.closest('.add-btn') || e.target.closest('.view-img-btn')) return;
+          const other = document.querySelector('.card.flipped');
+          if(other && other!==card) other.classList.remove('flipped');
+          card.classList.toggle('flipped');
+        });
+      
+        // front add
+        front.querySelector('.add-btn').addEventListener('click', e=>{ e.stopPropagation(); addToCart(p); });
+      
+        // back add(s)
+        back.querySelectorAll('.add-btn').forEach(b=>{
+          b.addEventListener('click', e=>{ e.stopPropagation(); addToCart(p); });
+        });
+      
+        // view image - open lightbox and disable background interaction
+        back.querySelector('.view-img-btn').addEventListener('click', e=>{
+          e.stopPropagation();
+          // open lightbox
+          lightboxOpen(p.img);
+        });
+      
+        // keyboard support
+        card.tabIndex = 0;
+        card.addEventListener('keydown', e=>{
+          if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); const other = document.querySelector('.card.flipped'); if(other && other!==card) other.classList.remove('flipped'); card.classList.toggle('flipped'); }
+        });
+      
+        return card;
+      }
+      
+      /* ========== RENDER BATCHING ========== */
+      function showSpinner(){ loadingSpinner.style.display='block' }
+      function hideSpinner(){ loadingSpinner.style.display='none' }
+      
+      function observeLastCard(){
+        const cards = grid.querySelectorAll('.card');
+        const last = cards[cards.length-1];
+        if(last) observer.observe(last);
+      }
+      
+      function renderNextBatch(){
+        if(loading) return;
+        if(currentIndex >= filteredProducts.length){ observer.disconnect(); return; }
+        loading=true; showSpinner();
+        setTimeout(()=>{
+          const slice = filteredProducts.slice(currentIndex, currentIndex + batchSize);
+          slice.forEach((p,i)=>{
+            const c = createCard(p);
+            c.classList.add('pop-in');
+            c.style.animationDelay = `${i*60}ms`;
+            c.style.opacity='1';
+            grid.appendChild(c);
+          });
+          currentIndex += slice.length; loading=false; hideSpinner();
+          if(currentIndex >= filteredProducts.length) observer.disconnect(); else observeLastCard();
+        }, 220);
+      }
+      
+      /* ========== FILTERS (SEARCH TITLE ONLY) ========= */
+      function filterAndRender(){
+        const q = (searchInput.value||'').trim().toLowerCase();
+        const cat = document.querySelector('.cat-btn.active').dataset.cat;
+        filteredProducts = products.filter(p=>{
+          const matchCat = (cat === 'all') || p.cat === cat;
+          // SEARCH ONLY TITLES now (user requested): only title is checked
+          const matchQ = !q || p.title.toLowerCase().includes(q);
+          return matchCat && matchQ;
+        });
+        currentIndex = 0; grid.innerHTML='';
+        if(!filteredProducts.length){ grid.innerHTML = '<div class="empty-state">No products found</div>'; hideSpinner(); observer.disconnect(); return; }
+        renderNextBatch();
+      }
+      
+      /* ========== INIT & EVENTS ========= */
+      window.addEventListener('DOMContentLoaded', ()=>{
+        if(!localStorage.getItem('hideHint')) hintTooltip.style.display='block';
+        filterAndRender(); updateCartDisplay();
+      });
+      
+      // hide hint
+      hideTooltipBtn && hideTooltipBtn.addEventListener && hideTooltipBtn.addEventListener('click', ()=>{
+        localStorage.setItem('hideHint','1'); hintTooltip.style.display='none';
+      });
+      
+      // search UI (clear button behavior)
+      searchInput.addEventListener('input', ()=>{ filterAndRender(); clearBtn.style.display = searchInput.value ? 'flex' : 'none'; });
+      searchBtn.addEventListener('click', ()=>{ filterAndRender(); searchInput.focus(); });
+      clearBtn.addEventListener('click', ()=>{ searchInput.value=''; filterAndRender(); clearBtn.style.display='none'; searchInput.focus(); });
+      
+      // category buttons
+      document.querySelectorAll('.cat-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{ document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); filterAndRender() });
+        btn.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); btn.click(); }});
+      });
+      
+      /* ========== CART MODAL OPEN/CLOSE (uses disable/enableBackgroundInteraction) ========== */
+      function openCartModal(){
+        cartModal.classList.add('active'); cartModal.setAttribute('aria-hidden','false');
+        const allowed = [cartModal.querySelector('.cart-content')];
+        disableBackgroundInteraction(allowed);
+        setTimeout(()=> closeCart.focus(),50);
+      }
+      cartBtn.addEventListener('click', ()=> openCartModal());
+      closeCart.addEventListener('click', ()=>{ 
+        cartModal.classList.remove('active'); cartModal.setAttribute('aria-hidden','true'); 
+        enableBackgroundInteraction(); 
+        cartBtn.focus();
+      });
+      cartModal.addEventListener('click', e=>{ if(e.target === cartModal) closeCart.click() });
+      clearCartBtn.addEventListener('click', ()=>{ if(cart.length && confirm('Clear cart?')){ cart=[]; saveCart(); updateCartDisplay(); } });
+      
+      /* ========== IMAGE LIGHTBOX: OPEN / CLOSE / ZOOM / PAN / SWIPE UP+DOWN TO DISMISS ========= */
+      
+      /*
+        Features implemented:
+        - openLightbox(url): opens and disables background
+        - Dismiss by tapping close, pressing ESC, clicking background
+        - Dismiss by swipe down OR swipe up (mobile)
+        - Pinch-to-zoom (2-finger)
+        - Double-tap to toggle zoom (centered around tap)
+        - Pan when zoomed
+        - Wheel zoom (desktop)
+        - Reset transforms on close
+      */
+      
+      let lbState = {
+        active: false,
+        scale: 1,
+        minScale: 1,
+        maxScale: 5,
+        startTouches: null,
+        lastDist: null,
+        panX: 0,
+        panY: 0,
+        startPanX: 0,
+        startPanY: 0,
+        lastTap: 0,
+        doubleTapThreshold: 300,
+        lastTapPos: null,
+        touchStartY: 0,
+        touchStartX: 0,
+        moved: false
+      };
+      
+      function lightboxOpen(url){
+        lightboxImg.src = url;
+        imgLightbox.classList.add('active');
+        imgLightbox.setAttribute('aria-hidden','false');
+        disableBackgroundInteraction([imgLightbox, lightboxImg]);
+        lbState.active = true; lbState.scale = 1; lbState.panX = 0; lbState.panY = 0;
+        lightboxImg.style.transform = '';
+        imgLightbox.style.background = '';
+        setTimeout(()=> closeLightbox.focus(), 50);
+      }
+      
+      /* Close & reset */
+      function lightboxClose(){
+        imgLightbox.classList.remove('active');
+        imgLightbox.setAttribute('aria-hidden','true');
+        enableBackgroundInteraction();
+        // reset transform and internal state
+        lbState.scale = 1; lbState.panX = 0; lbState.panY = 0; lbState.lastDist = null;
+        lightboxImg.style.transition = ''; lightboxImg.style.transform = '';
+        imgLightbox.style.transition = '';
+        lbState.active = false;
+      }
+      
+      /* click background closes */
+      imgLightbox.addEventListener('click', e=>{
+        if(e.target === imgLightbox){
+          lightboxClose();
+        }
+      });
+      
+      closeLightbox.addEventListener('click', ()=>{ lightboxClose(); });
+      
+      window.addEventListener('keydown', e=>{
+        if(e.key === 'Escape'){
+          if (cartModal.classList.contains('active')) {
+            closeCart.click();
+          }
+          if (imgLightbox.classList.contains('active')) {
+            lightboxClose();
+          }
+        }
+      });
+      
+      /* helpers: distance between two touches */
+      function dist(t1, t2){
+        const dx = t2.clientX - t1.clientX;
+        const dy = t2.clientY - t1.clientY;
+        return Math.hypot(dx, dy);
+      }
+      function midpoint(t1, t2){
+        return { x: (t1.clientX + t2.clientX)/2, y: (t1.clientY + t2.clientY)/2 };
+      }
+      
+      /* touch handlers on lightbox image container */
+      (function(){
+        let ongoingTouch = false;
+      
+        imgLightbox.addEventListener('touchstart', function(e){
+          if(!imgLightbox.classList.contains('active')) return;
+          if(e.touches.length === 1){
+            lbState.touchStartY = e.touches[0].clientY;
+            lbState.touchStartX = e.touches[0].clientX;
+            lbState.moved = false;
+          }
+          if(e.touches.length === 2){
+            // start pinch
+            lbState.lastDist = dist(e.touches[0], e.touches[1]);
+            lbState.startTouches = [e.touches[0], e.touches[1]];
+            // midpoint for focal point (not used for complicated transform anchor but good for double-tap centering)
+            lbState.mid = midpoint(e.touches[0], e.touches[1]);
+            // stop any transitions
+            lightboxImg.style.transition = '';
+            imgLightbox.style.transition = '';
+          }
+          ongoingTouch = true;
+        }, { passive: false });
+      
+        imgLightbox.addEventListener('touchmove', function(e){
+          if(!ongoingTouch || !imgLightbox.classList.contains('active')) return;
+          if(e.touches.length === 2){
+            e.preventDefault();
+            const newDist = dist(e.touches[0], e.touches[1]);
+            const scaleDelta = newDist / (lbState.lastDist || newDist);
+            let newScale = lbState.scale * scaleDelta;
+            newScale = Math.max(lbState.minScale, Math.min(lbState.maxScale, newScale));
+            // compute scale relative to center: simple approach that preserves current pan
+            lbState.scale = newScale;
+            lbState.lastDist = newDist;
+            applyTransform();
+          } else if(e.touches.length === 1){
+            const t = e.touches[0];
+            const dy = t.clientY - lbState.touchStartY;
+            const dx = t.clientX - lbState.touchStartX;
+            // if zoomed, allow panning
+            if(lbState.scale > 1.02){
+              e.preventDefault();
+              lbState.panX = (lbState.startPanX || 0) + (t.clientX - (lbState._panStartX || t.clientX));
+              lbState.panY = (lbState.startPanY || 0) + (t.clientY - (lbState._panStartY || t.clientY));
+              // On first pan start store origin:
+              if(lbState._panStartX === undefined){
+                lbState._panStartX = t.clientX;
+                lbState._panStartY = t.clientY;
+                lbState.startPanX = lbState.panX;
+                lbState.startPanY = lbState.panY;
+              }
+              applyTransform();
+              lbState.moved = true;
+            } else {
+              // handle swipe up/down dismissal when not zoomed
+              if(Math.abs(dy) > 8 && Math.abs(dy) > Math.abs(dx)){
+                lbState.moved = true;
+                // visually translate image following finger
+                lightboxImg.style.transition = 'transform 0s';
+                const tempScale = Math.max(0.94, 1 - Math.abs(dy)/2400);
+                lightboxImg.style.transform = `translateY(${dy}px) scale(${tempScale})`;
+                imgLightbox.style.background = `rgba(0,0,0,${Math.max(0.25, 0.85 - Math.abs(dy)/800)})`;
+              }
+            }
+          }
+        }, { passive: false });
+      
+        imgLightbox.addEventListener('touchend', function(e){
+          if(!ongoingTouch) return;
+          // If a pinch ended, finalize scale and reset lastDist
+          if(e.touches.length < 2) lbState.lastDist = null;
+          // If it was a pan (zoomed), commit pan start values
+          if(lbState.scale > 1.02){
+            // Commit pan starting origin for the next gesture and ensure consistent values
+            lbState.startPanX = lbState.panX;
+            lbState.startPanY = lbState.panY;
+            lbState._panStartX = undefined; lbState._panStartY = undefined;
+            constrainPan();
+            applyTransformWithTransition();
+          } else {
+            // If not zoomed and moved finger vertically enough -> dismiss either up or down
+            if(lbState.moved){
+              // compute final dy from last touch event if available
+              const changed = (e.changedTouches && e.changedTouches[0]) || {};
+              const endY = changed.clientY || lbState.touchStartY;
+              const dy = endY - lbState.touchStartY;
+              if(dy > 100 && Math.abs(dy) > 30){ // swipe down
+                // animate out
+                lightboxImg.style.transition = 'transform 220ms cubic-bezier(.22,.9,.27,1)';
+                lightboxImg.style.transform = `translateY(120px) scale(0.92)`;
+                imgLightbox.style.transition = 'background 220ms';
+                imgLightbox.style.background = `rgba(0,0,0,0.0)`;
+                setTimeout(()=> lightboxClose(), 220);
+              } else if(dy < -100 && Math.abs(dy) > 30){ // swipe up
+                lightboxImg.style.transition = 'transform 220ms cubic-bezier(.22,.9,.27,1)';
+                lightboxImg.style.transform = `translateY(-120px) scale(0.92)`;
+                imgLightbox.style.transition = 'background 220ms';
+                imgLightbox.style.background = `rgba(0,0,0,0.0)`;
+                setTimeout(()=> lightboxClose(), 220);
+              } else {
+                // revert to normal
+                lightboxImg.style.transition = 'transform 220ms cubic-bezier(.22,.9,.27,1)';
+                lightboxImg.style.transform = '';
+                imgLightbox.style.transition = 'background 220ms';
+                imgLightbox.style.background = '';
+                setTimeout(()=> { lightboxImg.style.transition=''; imgLightbox.style.transition=''; }, 260);
+              }
+            }
+          }
+      
+          // Double tap detection for toggling zoom (we detect based on recent tap)
+          // Only if it was a quick tap (not a move)
+          const now = Date.now();
+          const touch = (e.changedTouches && e.changedTouches[0]);
+          if(touch && !lbState.moved){
+            const last = lbState.lastTap || 0;
+            const lapse = now - last;
+            // coordinate proximity check
+            const lastPos = lbState.lastTapPos;
+            const closeEnough = lastPos ? (Math.hypot(touch.clientX-lastPos.x, touch.clientY-lastPos.y) < 40) : true;
+            if(lapse < lbState.doubleTapThreshold && closeEnough){
+              // double tap: toggle zoom
+              const doubleScale = 2.5;
+              if(lbState.scale > 1.1){
+                // reset
+                lbState.scale = 1;
+                lbState.panX = 0; lbState.panY = 0;
+              } else {
+                // zoom in centered around tap point: compute rough pan to center the tapped point
+                const rect = lightboxImg.getBoundingClientRect();
+                const cx = touch.clientX - rect.left - rect.width/2;
+                const cy = touch.clientY - rect.top - rect.height/2;
+                lbState.scale = doubleScale;
+                // pan so that tapped point moves towards center, scaled
+                lbState.panX = -cx * (lbState.scale - 1)/lbState.scale;
+                lbState.panY = -cy * (lbState.scale - 1)/lbState.scale;
+                constrainPan();
+              }
+              applyTransformWithTransition();
+              lbState.lastTap = 0; lbState.lastTapPos = null;
+            } else {
+              lbState.lastTap = now; lbState.lastTapPos = { x: touch.clientX, y: touch.clientY };
+              // set a timeout to clear lastTap to avoid memory
+              setTimeout(()=> { lbState.lastTap = 0; lbState.lastTapPos = null; }, lbState.doubleTapThreshold + 50);
+            }
+          }
+      
+          lbState.moved = false;
+          ongoingTouch = false;
+        }, { passive: false });
+      
+        // wheel zoom on desktop
+        imgLightbox.addEventListener('wheel', function(e){
+          if(!imgLightbox.classList.contains('active')) return;
+          e.preventDefault();
+          const delta = -e.deltaY;
+          const zoomFactor = delta > 0 ? 1.06 : 0.94;
+          let newScale = lbState.scale * zoomFactor;
+          newScale = Math.max(lbState.minScale, Math.min(lbState.maxScale, newScale));
+          lbState.scale = newScale;
+          // quick pan adjustment to center on mouse? approximate:
           const rect = lightboxImg.getBoundingClientRect();
-          const cx = touch.clientX - rect.left - rect.width/2;
-          const cy = touch.clientY - rect.top - rect.height/2;
-          lbState.scale = doubleScale;
-          // pan so that tapped point moves towards center, scaled
-          lbState.panX = -cx * (lbState.scale - 1)/lbState.scale;
-          lbState.panY = -cy * (lbState.scale - 1)/lbState.scale;
+          const cx = e.clientX - rect.left - rect.width/2;
+          const cy = e.clientY - rect.top - rect.height/2;
+          lbState.panX = lbState.panX - cx * (zoomFactor - 1)/lbState.scale;
+          lbState.panY = lbState.panY - cy * (zoomFactor - 1)/lbState.scale;
           constrainPan();
+          applyTransformWithTransition();
+        }, { passive: false });
+      
+        /* Transform application helpers */
+        function applyTransform(){
+          lightboxImg.style.transform = `translate(${lbState.panX}px, ${lbState.panY}px) scale(${lbState.scale})`;
         }
-        applyTransformWithTransition();
-        lbState.lastTap = 0; lbState.lastTapPos = null;
-      } else {
-        lbState.lastTap = now; lbState.lastTapPos = { x: touch.clientX, y: touch.clientY };
-        // set a timeout to clear lastTap to avoid memory
-        setTimeout(()=> { lbState.lastTap = 0; lbState.lastTapPos = null; }, lbState.doubleTapThreshold + 50);
-      }
-    }
-
-    lbState.moved = false;
-    ongoingTouch = false;
-  }, { passive: false });
-
-  // wheel zoom on desktop
-  imgLightbox.addEventListener('wheel', function(e){
-    if(!imgLightbox.classList.contains('active')) return;
-    e.preventDefault();
-    const delta = -e.deltaY;
-    const zoomFactor = delta > 0 ? 1.06 : 0.94;
-    let newScale = lbState.scale * zoomFactor;
-    newScale = Math.max(lbState.minScale, Math.min(lbState.maxScale, newScale));
-    lbState.scale = newScale;
-    // quick pan adjustment to center on mouse? approximate:
-    const rect = lightboxImg.getBoundingClientRect();
-    const cx = e.clientX - rect.left - rect.width/2;
-    const cy = e.clientY - rect.top - rect.height/2;
-    lbState.panX = lbState.panX - cx * (zoomFactor - 1)/lbState.scale;
-    lbState.panY = lbState.panY - cy * (zoomFactor - 1)/lbState.scale;
-    constrainPan();
-    applyTransformWithTransition();
-  }, { passive: false });
-
-  /* Transform application helpers */
-  function applyTransform(){
-    lightboxImg.style.transform = `translate(${lbState.panX}px, ${lbState.panY}px) scale(${lbState.scale})`;
-  }
-  function applyTransformWithTransition(){
-    lightboxImg.style.transition = 'transform 180ms cubic-bezier(.22,.9,.27,1)';
-    applyTransform();
-    setTimeout(()=> lightboxImg.style.transition = '', 220);
-  }
-  function constrainPan(){
-    // Basic pan constraints so you don't pan image out of view too far.
-    // We need element sizes:
-    const rect = lightboxImg.getBoundingClientRect();
-    const natural = { w: rect.width, h: rect.height };
-    const scaledW = rect.width * lbState.scale;
-    const scaledH = rect.height * lbState.scale;
-    const maxPanX = Math.max(0, (scaledW - rect.width) / 2);
-    const maxPanY = Math.max(0, (scaledH - rect.height) / 2);
-    lbState.panX = Math.max(-maxPanX - 40, Math.min(maxPanX + 40, lbState.panX));
-    lbState.panY = Math.max(-maxPanY - 40, Math.min(maxPanY + 40, lbState.panY));
-  }
-
-})();
-
-/* ========== SWIPE DOWN/UP (legacy safety): already handled in the touchend logic above. ========== */
-
-/* ========== ADD/INIT HELPERS ========== */
-window.filterAndRender = filterAndRender; // expose for debugging
-
-/* ========== SCROLL-TO-TOP BUTTON BEHAVIOR (with click animation) ========== */
-(function(){
-  const btn = document.getElementById('scrollToTopBtn');
-  if(!btn) return;
-  function updateVisibility(){
-    if(window.scrollY > 240){
-      btn.classList.add('visible');
-    } else {
-      btn.classList.remove('visible');
-    }
-  }
-  updateVisibility();
-  window.addEventListener('scroll', updateVisibility, { passive: true });
-
-  function scrollTopHandler(e){
-    e.preventDefault();
-    // click animation
-    btn.classList.add('click-anim');
-    setTimeout(()=> btn.classList.remove('click-anim'), 300);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    btn.blur();
-  }
-  btn.addEventListener('click', scrollTopHandler);
-  btn.addEventListener('keydown', (e)=>{
-    if(e.key === 'Enter' || e.key === ' '){
-      e.preventDefault();
-      scrollTopHandler(e);
-    }
-  });
-
-  btn.addEventListener('focus', ()=> btn.classList.add('focused'));
-  btn.addEventListener('blur', ()=> btn.classList.remove('focused'));
-})();
-
-/* ========== EXTRA: expose lightboxOpen for debugging/perf tests ========= */
-window.lightboxOpen = lightboxOpen;
-window.lightboxClose = lightboxClose;
-
-</script>
-
-</body>
+        function applyTransformWithTransition(){
+          lightboxImg.style.transition = 'transform 180ms cubic-bezier(.22,.9,.27,1)';
+          applyTransform();
+          setTimeout(()=> lightboxImg.style.transition = '', 220);
+        }
+        function constrainPan(){
+          // Basic pan constraints so you don't pan image out of view too far.
+          // We need element sizes:
+          const rect = lightboxImg.getBoundingClientRect();
+          const natural = { w: rect.width, h: rect.height };
+          const scaledW = rect.width * lbState.scale;
+          const scaledH = rect.height * lbState.scale;
+          const maxPanX = Math.max(0, (scaledW - rect.width) / 2);
+          const maxPanY = Math.max(0, (scaledH - rect.height) / 2);
+          lbState.panX = Math.max(-maxPanX - 40, Math.min(maxPanX + 40, lbState.panX));
+          lbState.panY = Math.max(-maxPanY - 40, Math.min(maxPanY + 40, lbState.panY));
+        }
+      
+      })();
+      
+      /* ========== SWIPE DOWN/UP (legacy safety): already handled in the touchend logic above. ========== */
+      
+      /* ========== ADD/INIT HELPERS ========== */
+      window.filterAndRender = filterAndRender; // expose for debugging
+      
+      /* ========== SCROLL-TO-TOP BUTTON BEHAVIOR (with click animation) ========== */
+      (function(){
+        const btn = document.getElementById('scrollToTopBtn');
+        if(!btn) return;
+        function updateVisibility(){
+          if(window.scrollY > 240){
+            btn.classList.add('visible');
+          } else {
+            btn.classList.remove('visible');
+          }
+        }
+        updateVisibility();
+        window.addEventListener('scroll', updateVisibility, { passive: true });
+      
+        function scrollTopHandler(e){
+          e.preventDefault();
+          // click animation
+          btn.classList.add('click-anim');
+          setTimeout(()=> btn.classList.remove('click-anim'), 300);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          btn.blur();
+        }
+        btn.addEventListener('click', scrollTopHandler);
+        btn.addEventListener('keydown', (e)=>{
+          if(e.key === 'Enter' || e.key === ' '){
+            e.preventDefault();
+            scrollTopHandler(e);
+          }
+        });
+      
+        btn.addEventListener('focus', ()=> btn.classList.add('focused'));
+        btn.addEventListener('blur', ()=> btn.classList.remove('focused'));
+      })();
+      
+      /* ========== EXTRA: expose lightboxOpen for debugging/perf tests ========= */
+      window.lightboxOpen = lightboxOpen;
+      window.lightboxClose = lightboxClose;
+      
+    </script>
+  </body>
 </html>
