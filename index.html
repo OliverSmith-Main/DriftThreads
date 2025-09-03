@@ -100,7 +100,9 @@
     .wrap{max-width:var(--max);margin:0 auto;padding: clamp(16px, 3vw, 32px);}
 
     .topbar{
-      position:fixed;top:0;left:0;right:0;
+      position:fixed;
+      min-width: 95vw;
+      top:0;left:0;right:0; 
       margin:10px;max-width:var(--max);
       display:flex;justify-content:space-between;align-items:center;gap:16px;
       background:rgba(10,15,26,0.8);
@@ -163,6 +165,7 @@
     .tests{display:grid;gap:12px;}
     @media(min-width:600px){.tests{grid-template-columns:1fr 1fr;}}
     .test{padding:16px;margin:0 10px 0 10px; border-radius:var(--radius);border:1px solid var(--stroke);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));}
+    .test-name {color: var(--accent-3);}
     .contact{margin:32px 10px 0 10px;padding:18px;border-radius:var(--radius);border:1px solid var(--stroke);
       background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
     footer{margin:40px 20px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:14px;}
@@ -224,7 +227,7 @@
       <div class="strip">
         <div class="product"><div class="thumb"><img src="products/hoodies/bmw.jpeg" alt="BMW Hoodie"></div><div class="meta">BMW Hoodie</div><div class="price">R650.00</div></div>
         <div class="product"><div class="thumb"><img src="products/hoodies/911_gt3_rs.jpeg" alt="911 GT3 RS Hoodie"></div><div class="meta">911 GT3 RS Hoodie</div><div class="price">R650.00</div></div>
-        <div class="product"><div class="thumb"><img src="products/hoodies/cod.jpeg" alt="Ghost Ops Hoodie"></div><div class="meta">COD Hoodie</div><div class="price">R650.00</div></div>
+        <div class="product"><div class="thumb"><img src="products/hoodies/cod.jpeg" alt="Ghost Ops Hoodie"></div><div class="meta">Ghost Ops Hoodie</div><div class="price">R650.00</div></div>
         <div class="product"><div class="thumb"><img src="products/hoodies/one_piece_bros.jpeg" alt="One Piece Hoodie"></div><div class="meta">One Piece Hoodie</div><div class="price">R650.00</div></div>
         <div class="product"><div class="thumb"><img src="products/hoodies/gojo.jpeg" alt="Gojo Hoodie"></div><div class="meta">Gojo Hoodie</div><div class="price">R650.00</div></div>
         <div class="product"><div class="thumb"><img src="products/supplements/honey_1kg.jpeg" alt="Honey jar"></div><div class="meta">Liquid Gold™ (1kg)</div><div class="price">R220.00</div></div>
@@ -241,10 +244,10 @@
       <div>
         <h3>Word on the street</h3>
         <div class="tests hidden">
-          <div class="test">"Fits mad. Got 3 hoodies and it still hits."<br><strong>-- Anonymous</strong></div>
-          <div class="test">"Local brand that actually cares about quality."<br><strong>-- Anonymous</strong></div>
-          <div class="test">"Honey's solid. Hoodies tougher than my ex."<br><strong>-- Anonymous</strong></div>
-          <div class="test">"Fast shipping and proper packaging, for once."<br><strong>-- Anonymous</strong></div>
+          <div class="test">"Fits mad. Got 3 hoodies and it still hits."<br><strong class="test-name">-- Anonymous</strong></div>
+          <div class="test">"Local brand that actually cares about quality."<br><strong class="test-name">-- Anonymous</strong></div>
+          <div class="test">"Honey's solid. Hoodies tougher than my ex."<br><strong class="test-name">-- Anonymous</strong></div>
+          <div class="test">"Fast shipping and proper packaging, for once."<br><strong class="test-name">-- Anonymous</strong></div>
         </div>
       </div>
     </section>
