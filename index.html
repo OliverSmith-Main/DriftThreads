@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>DriftThreads -- Drops & Drive</title>
   <meta name="description" content="Streetwear meets horsepower. Limited hoodies, crisp graphics, and Joburg-made drops.">
+  <meta name="image" content="assets/logo.png">
+
   <link rel="icon" href="assets/favicon.png" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -15,7 +17,7 @@
     transform: translateY(-5vw);
     filter: blur(1px);
 
-    transition: all 1s;
+    transition: all .5s;
 }
 
 .show {
@@ -126,7 +128,7 @@
       background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--stroke);}
     .pill:hover{transform:translateY(-1px) scale(1.03);box-shadow:0 2px 8px rgba(0,0,0,.4);}
     .pill:active{transform:translateY(1px) scale(.98);}
-    .primary{padding:9px 16px;border-radius:10px;font-weight:800;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#061220;border:0;}
+    .primary{padding:9px 16px;border-radius:999px;font-weight:800;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#061220;border:0;}
     .primary:hover{transform:translateY(-1px) scale(1.03);box-shadow:0 2px 10px rgba(0,0,0,.55);}
     .primary:active{transform:translateY(1px) scale(.97);}
     .hamburger{display:none;font-size:24px;color:var(--text);cursor:pointer;z-index:110;}
@@ -193,7 +195,7 @@
       <a class="pill" href="#products">Products</a>
       <a class="pill" href="#about">About</a>
       <a class="pill" href="#contact">Contact</a>
-      <a class="primary" href="home.html">Shop</a>
+      <a class="primary" href="./home/">Shop</a>
     </div>
     <div class="hamburger" id="hamburger" aria-controls="navMenu" aria-expanded="false" role="button" tabindex="0">
       <i class="fa-solid fa-bars" aria-hidden="true"></i>
@@ -203,7 +205,7 @@
       <a class="pill" href="#products" role="menuitem">Products</a>
       <a class="pill" href="#about" role="menuitem">About</a>
       <a class="pill" href="#contact" role="menuitem">Contact</a>
-      <a class="primary" href="home.html" role="menuitem">Shop</a>
+      <a class="primary" href="./home/" role="menuitem">Shop</a>
     </div>
   </div>
 
@@ -215,7 +217,7 @@
         <h2 class="hero-title">Gear up. Drift hard. Look clean.</h2>
         <p class="lead">Car-themed hoodies, crisp DTG graphics, and whatever hits. Made in Joburg with proper care.</p>
         <div class="actions">
-          <a class="primary" href="home.html">Shop the drop</a>
+          <a class="primary" href="./home/">Shop the drop</a>
           <a class="pill" href="#products">See bestsellers</a>
         </div>
       </div>
@@ -225,12 +227,12 @@
     <section id="products">
       <h3>Featured -- Drop Highlights</h3>
       <div class="strip">
-        <div class="product"><div class="thumb"><img src="products/hoodies/bmw.jpeg" alt="BMW Hoodie"></div><div class="meta">BMW Hoodie</div><div class="price">R650.00</div></div>
-        <div class="product"><div class="thumb"><img src="products/hoodies/911_gt3_rs.jpeg" alt="911 GT3 RS Hoodie"></div><div class="meta">911 GT3 RS Hoodie</div><div class="price">R650.00</div></div>
-        <div class="product"><div class="thumb"><img src="products/hoodies/cod.jpeg" alt="Ghost Ops Hoodie"></div><div class="meta">Ghost Ops Hoodie</div><div class="price">R650.00</div></div>
-        <div class="product"><div class="thumb"><img src="products/hoodies/one_piece_bros.jpeg" alt="One Piece Hoodie"></div><div class="meta">One Piece Hoodie</div><div class="price">R650.00</div></div>
-        <div class="product"><div class="thumb"><img src="products/hoodies/gojo.jpeg" alt="Gojo Hoodie"></div><div class="meta">Gojo Hoodie</div><div class="price">R650.00</div></div>
-        <div class="product"><div class="thumb"><img src="products/supplements/honey_1kg.jpeg" alt="Honey jar"></div><div class="meta">Liquid Gold™ (1kg)</div><div class="price">R220.00</div></div>
+        <div class="product"><div class="thumb"><img src="./home/products/hoodies/bmw.jpeg" alt="BMW Hoodie"></div><div class="meta">BMW Hoodie</div><div class="price">R650.00</div></div>
+        <div class="product"><div class="thumb"><img src="./home/products/hoodies/911_gt3_rs.jpeg" alt="911 GT3 RS Hoodie"></div><div class="meta">911 GT3 RS Hoodie</div><div class="price">R650.00</div></div>
+        <div class="product"><div class="thumb"><img src="./home/products/hoodies/cod.jpeg" alt="Ghost Ops Hoodie"></div><div class="meta">Ghost Ops Hoodie</div><div class="price">R650.00</div></div>
+        <div class="product"><div class="thumb"><img src="./home/products/hoodies/one_piece_bros.jpeg" alt="One Piece Hoodie"></div><div class="meta">One Piece Hoodie</div><div class="price">R650.00</div></div>
+        <div class="product"><div class="thumb"><img src="./home/products/hoodies/gojo.jpeg" alt="Gojo Hoodie"></div><div class="meta">Gojo Hoodie</div><div class="price">R650.00</div></div>
+        <div class="product"><div class="thumb"><img src="./home/products/supplements/honey_1kg.jpeg" alt="Honey jar"></div><div class="meta">Liquid Gold™ (1kg)</div><div class="price">R220.00</div></div>
       </div>
     </section>
 
@@ -262,7 +264,7 @@
     </section>
 
     <footer>
-      <div>© DriftThreads -- Made in Joburg</div>
+      <div>© DriftThreads<br>Streetwear built to drift -- Only in Joburg.</div>
       <div class="muted">Follow: @driftthreads</div>
     </footer>
   </div>
