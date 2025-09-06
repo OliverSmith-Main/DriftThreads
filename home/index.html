@@ -27,6 +27,7 @@
  html,body{ margin:0; padding:0; width:100%; height:100%; background:var(--bg); color:var(--text); font-family:'Lexend',sans-serif }
  a{ color:inherit }
  ::selection{ background:rgba(10,170,255,0.14) }
+
 /* hide thin webkit scrollbar */
  ::-webkit-scrollbar{ width:0; background:transparent }
  #scrollToTopBtn i { text-decoration:none; line-height:1; font-size:20px; display:inline-block;}
@@ -202,20 +203,23 @@
    background: linear-gradient(90deg,#D1FAE5,#10B981);
    color:#012;
 }
- .card-badge.sale .badge-dot{ background:#059669; }
+ .card-badge.sale .badge-dot{ background:#036b4a; }
 
 /* limited / special style (gold) */
  .card-badge.limited{
    background: linear-gradient(90deg,#FFEBB7,#F59E0B);
    color:#081214;
 }
- .card-badge.limited .badge-dot{ background:#D97706; }
+ .card-badge.limited .badge-dot{ background:#ac5d03; }
 
 /* fallback neutral */
  .card-badge.neutral{
    background: linear-gradient(90deg,#E6EEF8,#9FB7D8);
    color:#021019;
 }
+ .card-badge.neutral .badge-dot{
+   background: black}
+
  @media (max-width:500px){
    .card-badge{ padding:5px 8px; font-size:0.72rem; }
 }
@@ -398,7 +402,7 @@
 
     <header>
       <div class="top-row">
-        <div class="logo"><img src="assets/favicon.png" alt="logo"></div>
+        <div class="logo"><a href="./"><img src="assets/favicon.png" alt="logo"></a></div>
         <div class="search-wrap">
           <div class="search-box">
             <input id="searchInput" type="text" placeholder="Search products..." aria-label="Search products">
@@ -416,6 +420,7 @@
     <div class="cat-bar" role="tablist">
       <button class="cat-btn active" data-cat="all" type="button">All</button>
       <button class="cat-btn" data-cat="hoodies" type="button">Hoodies</button>
+      <button class="cat-btn" data-cat="mugs" type="button">Mugs</button>
       <button class="cat-btn" data-cat="supplements" type="button">Supplements</button>
       <button class="cat-btn" data-cat="other" type="button">Other</button>
     </div>
@@ -449,29 +454,33 @@
       <button id="closeLightbox" type="button" aria-label="Close image" style="position:absolute;right:18px;top:18px;background:transparent;border:0;color:#fff;font-size:22px; cursor: pointer;"><i class="fas fa-times"></i></button>
       <img id="lightboxImg" alt="" style="max-width:95%;max-height:85%;border-radius:8px;touch-action:manipulation">
     </div>
+    
+ 
 
     <script>
-      /* ========== DATA & REFS (updated with badge field) ========= */
+      /* ========== DATA & REFS ========= */
       const products = [
-        {id:1,title:'Kakashi Hoodie',price:650,cat:'hoodies',img:'products/hoodies/kakashi.jpeg',description:"Premium cotton-blend hoodie featuring Kakashi's fanart", badge: ''},
-        {id:2,title:'BMW Hoodie',price:650,cat:'hoodies',img:'products/hoodies/bmw.jpeg',description:'Classic "I need Money for BMW" hoodie', badge: ''},
-        {id:3,title:'911 GT3 RS Hoodie',price:650,cat:'hoodies',img:'products/hoodies/911_gt3_rs.jpeg',description:'Sleek hoodie with the Porsche 911 GT3 RS', badge: ''},
-        {id:4,title:'BMW M Hoodie',price:650,cat:'hoodies',img:'products/hoodies/bmw_m.jpeg',description:'Stylish BMW M series inspired hoodie', badge: ''},
-        {id:5,title:'Monkey D. Luffy Hoodie',price:650,cat:'hoodies',img:'products/hoodies/monkey_d_luffy.jpeg',description:'One Piece fan favorite hoodie with Luffy print', badge: ''},
-        {id:6,title:'Tokyo Ghoul Hoodie',price:650,cat:'hoodies',img:'products/hoodies/tokyo_ghoul.jpeg',description:'Dark and edgy Tokyo Ghoul themed hoodie', badge: ''},
-        {id:7,title:'Akatsuki Hoodie',price:750,cat:'hoodies',img:'products/hoodies/akatsuki.jpeg',description:'Iconic Akatsuki cloud design hoodie from Naruto', badge: ''},
-        {id:8,title:'COD Hoodie',price:650,cat:'hoodies',img:'products/hoodies/cod.jpeg',description:'Call of Duty inspired gaming hoodie', badge: ''},
-        {id:9,title:'One Piece Bros Hoodie',price:650,cat:'hoodies',img:'products/hoodies/one_piece_bros.jpeg',description:'Luffy, Ace & Sabo hoodie for all One Piece fans', badge: ''},
-        {id:10,title:'Tokyo Revengers Hoodie',price:650,cat:'hoodies',img:'products/hoodies/tokyo_revengers.jpeg',description:'Tokyo Revengers themed hoodie', badge: '20% off'},
-        {id:11,title:'Batman Hoodie',price:650,cat:'hoodies',img:'products/hoodies/batman.jpeg',description:'Dark knight inspired Batman hoodie', badge: ''},
-        {id:12,title:'Gojo Hoodie',price:650,cat:'hoodies',img:'products/hoodies/gojo.jpeg',description:'Jujutsu Kaisen fan favorite hoodie with Gojo design', badge: ''},
-        {id:13,title:'Satoru Gojo Hoodie',price:650,cat:'hoodies',img:'products/hoodies/satoru_gojo.jpeg',description:'Another Gojo styled hoodie for the true fans', badge: ''},
-        {id:14,title:'Straw Hats Hoodie',price:650,cat:'hoodies',img:'products/hoodies/straw_hats.jpeg',description:'One Piece Straw Hats logo crew hoodie', badge: ''},
-        {id:15,title:'Ronaldo CR7 Hoodie',price:650,cat:'hoodies',img:'products/hoodies/ronaldo_cr7.jpeg',description:'Premium hoodie featuring Cristiano Ronaldo\'s iconic CR7 branding', badge: ''},
-        {id:16,title:'Ronaldo Real Madrid Hoodie',price:700,cat:'hoodies',img:'products/hoodies/cr7_rm.jpeg',description:'Official Real Madrid inspired hoodie celebrating Ronaldo\'s legacy', badge: ''},
-        {id:17,title:'Messi Hoodie',price:650,cat:'hoodies',img:'products/hoodies/messi.jpeg',description:'Stylish hoodie featuring Lionel Messi\'s signature style', badge: ''},
-        {id:18,title:'Honey (1kg)',price:220,cat:'supplements',img:'products/supplements/honey_1kg.jpeg',description:'The classic homemade honey, <strong>Liquid Gold™</strong> - a sub-brand of <strong>Drift Threads™</strong>', badge:'Limited'},
-        {id:19,title:'PRODUCT UNAVAILABLE',price:69,cat:'other',img:'products/other/unavail.jpeg',description:'PRODUCT UNAVAILABLE TEST FOR SERVER, IGNORE', badge: ''},
+        {id:1,title:'Drift Threads™ Hoodie',price:700,cat:'hoodies',img:'products/hoodies/driftthreads_hoodie.jpeg',description:"Premium cotton-blend hoodie, soft inside, durable outside, perfect for casual and street style vibes", badge: 'Official'},
+        {id:2,title:'Kakashi Hoodie',price:650,cat:'hoodies',img:'products/hoodies/kakashi.jpeg',description:"Premium cotton-blend hoodie featuring Kakashi's fanart", badge: ''},
+        {id:3,title:'BMW Hoodie',price:650,cat:'hoodies',img:'products/hoodies/bmw.jpeg',description:'Classic "I need Money for BMW" hoodie', badge: ''},
+        {id:4,title:'911 GT3 RS Hoodie',price:650,cat:'hoodies',img:'products/hoodies/911_gt3_rs.jpeg',description:'Sleek hoodie with the Porsche 911 GT3 RS', badge: ''},
+        {id:5,title:'BMW M Hoodie',price:650,cat:'hoodies',img:'products/hoodies/bmw_m.jpeg',description:'Stylish BMW M series inspired hoodie', badge: ''},
+        {id:6,title:'Monkey D. Luffy Hoodie',price:650,cat:'hoodies',img:'products/hoodies/monkey_d_luffy.jpeg',description:'One Piece fan favorite hoodie with Luffy print', badge: ''},
+        {id:7,title:'Tokyo Ghoul Hoodie',price:650,cat:'hoodies',img:'products/hoodies/tokyo_ghoul.jpeg',description:'Dark and edgy Tokyo Ghoul themed hoodie', badge: ''},
+        {id:8,title:'Akatsuki Hoodie',price:750,cat:'hoodies',img:'products/hoodies/akatsuki.jpeg',description:'Iconic Akatsuki cloud design hoodie from Naruto', badge: ''},
+        {id:9,title:'COD Hoodie',price:650,cat:'hoodies',img:'products/hoodies/cod.jpeg',description:'Call of Duty inspired gaming hoodie', badge: ''},
+        {id:10,title:'One Piece Bros Hoodie',price:650,cat:'hoodies',img:'products/hoodies/one_piece_bros.jpeg',description:'Luffy, Ace & Sabo hoodie for all One Piece fans', badge: ''},
+        {id:11,title:'Tokyo Revengers Hoodie',price:650,cat:'hoodies',img:'products/hoodies/tokyo_revengers.jpeg',description:'Tokyo Revengers themed hoodie', badge: '20% Off'},
+        {id:12,title:'Batman Hoodie',price:650,cat:'hoodies',img:'products/hoodies/batman.jpeg',description:'Dark knight inspired Batman hoodie', badge: ''},
+        {id:13,title:'Gojo Hoodie',price:650,cat:'hoodies',img:'products/hoodies/gojo.jpeg',description:'Jujutsu Kaisen fan favorite hoodie with Gojo design', badge: ''},
+        {id:14,title:'Satoru Gojo Hoodie' ,price:650,cat:'hoodies',img:'products/hoodies/satoru_gojo.jpeg',description:'Another Gojo styled hoodie for the true fans', badge: ''},
+        {id:15,title:'Straw Hats Hoodie',price:650,cat:'hoodies',img:'products/hoodies/straw_hats.jpeg',description:'One Piece Straw Hats logo crew hoodie', badge: ''},
+        {id:16,title:'Ronaldo CR7 Hoodie',price:650,cat:'hoodies',img:'products/hoodies/ronaldo_cr7.jpeg',description:'Premium hoodie featuring Cristiano Ronaldo\'s iconic CR7 branding', badge: ''},
+        {id:17,title:'Ronaldo Real Madrid Hoodie',price:700,cat:'hoodies',img:'products/hoodies/cr7_rm.jpeg',description:'Official Real Madrid inspired hoodie celebrating Ronaldo\'s legacy', badge: 'Hot'},
+        {id:18,title:'Messi Hoodie',price:650,cat:'hoodies',img:'products/hoodies/messi.jpeg',description:'Stylish hoodie featuring Lionel Messi\'s signature style', badge: 'Exclusive'},
+        {id:19,title:'Drift Threads™ Mug',price:150,cat:'mugs',img:'products/mugs/driftthreads_mug.jpeg',description:'Your morning coffee just got a glow-up — Drift Threads™ approved', badge:'Official'},
+        {id:20,title:'Liquid Gold™ Honey (1kg)',price:220,cat:'supplements',img:'products/supplements/honey_1kg.jpeg',description:'The classic homemade honey, <strong>Liquid Gold™</strong> - a sub-brand of <strong>Drift Threads™</strong>', badge:'Limited'},
+        {id:21,title:'PRODUCT UNAVAILABLE',price:69,cat:'other',img:'products/other/unavail.jpeg',description:'PRODUCT UNAVAILABLE TEST FOR SERVER, IGNORE', badge: 'Test'},
       ];
       
       const grid = document.getElementById('grid');
@@ -744,22 +753,43 @@
         // add badge to image if badge text exists
         try {
           const imgWrap = front.querySelector('.img-wrap');
-          if(imgWrap && p.badge && String(p.badge).trim()){
-            const badgeText = String(p.badge).trim();
-            const badgeEl = document.createElement('div');
-            // choose style by content: percentage/off → sale, 'limited' or 'limited' text → limited, else neutral
-            const lower = badgeText.toLowerCase();
-            let styleClass = 'neutral';
-            if(/\d+\s*%/.test(badgeText) || /off/i.test(badgeText) || /\d+\s*percent/.test(lower)) styleClass = 'sale';
-            else if(/limited|exclusive|new|drop|hot/i.test(lower)) styleClass = 'limited';
-            badgeEl.className = `card-badge ${styleClass}`;
-            badgeEl.setAttribute('role','status');
-            badgeEl.setAttribute('aria-label', badgeText);
-            badgeEl.innerHTML = `<span class="badge-dot" aria-hidden="true"></span><span class="badge-text">${badgeText}</span>`;
-            // ensure badge won't block pointer events (click-to-flip)
-            badgeEl.style.pointerEvents = 'none';
-            imgWrap.appendChild(badgeEl);
-          }
+
+            // Check if the image wrapper exists and if the product has a badge
+            if (imgWrap && p.badge && String(p.badge).trim()) {
+
+              const badgeText = String(p.badge).trim(); // Convert badge to string and trim whitespace
+              const badgeEl = document.createElement('div'); // Create a new badge element
+
+              // Determine the style of the badge based on its content:
+              // - 'sale': contains a percentage or 'off' (e.g., "20% off", "50 percent", "Sale 30%", "Offical")
+              // - 'limited': contains keywords like 'limited', 'exclusive', 'new', 'drop', or 'hot' (e.g., "Limited Edition", "Hot Drop", "Exclusive")
+              // - 'neutral': anything else (e.g., "Best Seller", "Staff Pick")
+              const lower = badgeText.toLowerCase();
+              let styleClass = 'neutral';
+              if (/\d+\s*%/.test(badgeText) || /off/i.test(badgeText) || /\d+\s*percent/.test(lower)) {
+                styleClass = 'sale';
+              } else if (/limited|exclusive|new|drop|hot/i.test(lower)) {
+                styleClass = 'limited';
+              }
+
+              // Assign classes and accessibility attributes
+              badgeEl.className = `card-badge ${styleClass}`;
+              badgeEl.setAttribute('role', 'status'); // Let screen readers know it's a status indicator
+              badgeEl.setAttribute('aria-label', badgeText); // Provide readable label for accessibility
+
+              // Fill the badge element with a dot (visual indicator) and the badge text
+              badgeEl.innerHTML = `
+                <span class="badge-dot" aria-hidden="true"></span>
+                <span class="badge-text">${badgeText}</span>
+              `;
+
+              // Make sure badge doesn’t interfere with pointer events (like click-to-flip)
+              badgeEl.style.pointerEvents = 'none';
+
+              // Add the badge to the image wrapper
+              imgWrap.appendChild(badgeEl);
+            }
+
         } catch (err) {
           // defensive: if badge injection fails, ignore
           console.error('Badge injection error', err);
@@ -934,22 +964,22 @@
       clearCartBtn.addEventListener('click', ()=>{ if(cart.length && confirm('Clear cart?')){ cart=[]; saveCart(); updateCartDisplay(); } });
       
       /* ========== WhatsApp ORDER BUTTON ========= */
-      const WA_NUMBER = '27713468567'; // no plus, wa.me expects country code without plus
+      const WA_NUMBER = '27713468567'; 
       function buildWhatsAppMessage(){
-        if(!cart || !cart.length) return encodeURIComponent("Hi, I'm ordering from the website:%0A%0ANo items in cart.");
+        if(!cart || !cart.length) return encodeURIComponent("🛒 Hey -- ordering from the site:%0A%0ANo items in cart. (bruh)");
         // Greeting line
         let lines = [];
-        lines.push("Hi, I'm ordering from the website:");
+        lines.push("🛒 Hey -- ordering from the site:");
         lines.push(""); // blank line
         // Items
         cart.forEach(item=>{
-          const line = `${item.title} (${money(item.price)}) x${item.qty}`;
+          const line = `- ${item.title} (${money(item.price)}) x${item.qty}`;
           lines.push(line);
         });
         lines.push(""); // blank line
         // Subtotal bolded using WhatsApp markdown (*bold*)
         const subtotal = money(cart.reduce((a,c)=>a + c.price*c.qty, 0));
-        lines.push(`*Subtotal:* ${subtotal}`);
+        lines.push(`*Subtotal: ${subtotal}*`);
         // join with line breaks and encode
         return encodeURIComponent(lines.join("\n"));
       }
