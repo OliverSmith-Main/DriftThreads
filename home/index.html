@@ -974,13 +974,16 @@
             <div class="price-row">
               <div class="price">${money(p.price)}</div>
               <div style="display:flex;gap:8px;align-items:center">
-                <button class="share-btn" type="button" aria-label="Share ${p.title}"><i class="fas fa-share-alt" aria-hidden="true"></i></button>
                 <button class="add-btn" type="button" aria-label="Add ${p.title}"><i class="fas fa-plus"></i></button>
-              </div>
-            </div>
-          </div>
-        `;
-        const frontImg = front.querySelector('img');
+                </div>
+                </div>
+                </div>
+                `;
+                // <button class="share-btn" type="button" aria-label="Share ${p.title}"><i class="fas fa-share-alt" aria-hidden="true"></i></button>
+        
+        
+        
+                const frontImg = front.querySelector('img');
         setImageFallback(frontImg);
         const back = document.createElement('div'); back.className='card-back';
         back.innerHTML = `
