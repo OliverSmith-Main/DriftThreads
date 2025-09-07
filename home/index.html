@@ -125,8 +125,58 @@
  @keyframes popBadge{ 0%{ transform:scale(1) } 30%{ transform:scale(1.35) } 100%{ transform:scale(1) } }
 
 /* categories */
- .cat-bar{ display:flex; gap:8px; padding-top:10px; flex-wrap:wrap; margin-left: 30px; }
- .cat-btn{ background:#fff; color:#222; padding:6px 12px; border-radius:10px; border:0; cursor:pointer }
+.cat-bar {
+  display: flex;
+  padding-top: 10px;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent wrapping */
+  margin-left: 30px; /* Maintain existing left margin */
+  /* background: linear-gradient(
+  to right,
+  rgba(0, 0, 0, 0) 80%,       
+  rgba(0, 0, 0, 0.8)70%,    
+  rgba(0, 0, 0, 1) 100%) ;    
+  padding-bottom: 10px; */
+;
+}
+
+
+
+/* Optional: fade arrow when scrolled fully to the right */
+.cat-bar.scrolled-end::after {
+  opacity: 0;
+}
+
+
+.cat-btn {
+  background: #fff;
+  color: #222;
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: 0;
+  cursor: pointer;
+  flex-shrink: 0; /* Prevent buttons from shrinking */
+  margin-right: 5px; /* Maintain existing left margin */
+
+}
+/* Hide scrollbars cross-browser on small screens */
+@media (max-width: 768px) {
+  .cat-bar {
+    scrollbar-width: none;         /* Firefox */
+  }
+  .cat-bar::-webkit-scrollbar {    /* Chrome, Safari, Edge (Chromium) */
+    display: none;
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+  /* Older IE/Edge legacy (optional) */
+  .cat-bar {
+    -ms-overflow-style: none;      /* IE 10+ */
+  }
+}
+
+
  .cat-btn.active{ background:#0066ff; color:#fff }
 
 /* grid */
@@ -344,6 +394,9 @@
   <body>
 
     <script>
+
+      
+
       // PRELOADER + APP INITIALIZATION
       // Preloader waits for window 'load' + minTime, then triggers first render (filterAndRender).
       // The preloader will only hide after the first batch finishes rendering (renderNextBatch resolves).
@@ -458,29 +511,34 @@
  
 
     <script>
+
+      
+
       /* ========== DATA & REFS ========= */
       const products = [
-        {id:1,title:'Drift Threads™ Hoodie',price:700,cat:'hoodies',img:'products/hoodies/driftthreads_hoodie.jpeg',description:"Premium cotton-blend hoodie, soft inside, durable outside, perfect for casual and street style vibes", badge: 'Official'},
-        {id:2,title:'Kakashi Hoodie',price:650,cat:'hoodies',img:'products/hoodies/kakashi.jpeg',description:"Premium cotton-blend hoodie featuring Kakashi's fanart", badge: ''},
-        {id:3,title:'BMW Hoodie',price:650,cat:'hoodies',img:'products/hoodies/bmw.jpeg',description:'Classic "I need Money for BMW" hoodie', badge: ''},
-        {id:4,title:'911 GT3 RS Hoodie',price:650,cat:'hoodies',img:'products/hoodies/911_gt3_rs.jpeg',description:'Sleek hoodie with the Porsche 911 GT3 RS', badge: ''},
-        {id:5,title:'BMW M Hoodie',price:650,cat:'hoodies',img:'products/hoodies/bmw_m.jpeg',description:'Stylish BMW M series inspired hoodie', badge: ''},
-        {id:6,title:'Monkey D. Luffy Hoodie',price:650,cat:'hoodies',img:'products/hoodies/monkey_d_luffy.jpeg',description:'One Piece fan favorite hoodie with Luffy print', badge: ''},
-        {id:7,title:'Tokyo Ghoul Hoodie',price:650,cat:'hoodies',img:'products/hoodies/tokyo_ghoul.jpeg',description:'Dark and edgy Tokyo Ghoul themed hoodie', badge: ''},
-        {id:8,title:'Akatsuki Hoodie',price:750,cat:'hoodies',img:'products/hoodies/akatsuki.jpeg',description:'Iconic Akatsuki cloud design hoodie from Naruto', badge: ''},
-        {id:9,title:'COD Hoodie',price:650,cat:'hoodies',img:'products/hoodies/cod.jpeg',description:'Call of Duty inspired gaming hoodie', badge: ''},
-        {id:10,title:'One Piece Bros Hoodie',price:650,cat:'hoodies',img:'products/hoodies/one_piece_bros.jpeg',description:'Luffy, Ace & Sabo hoodie for all One Piece fans', badge: ''},
-        {id:11,title:'Tokyo Revengers Hoodie',price:650,cat:'hoodies',img:'products/hoodies/tokyo_revengers.jpeg',description:'Tokyo Revengers themed hoodie', badge: '20% Off'},
-        {id:12,title:'Batman Hoodie',price:650,cat:'hoodies',img:'products/hoodies/batman.jpeg',description:'Dark knight inspired Batman hoodie', badge: ''},
-        {id:13,title:'Gojo Hoodie',price:650,cat:'hoodies',img:'products/hoodies/gojo.jpeg',description:'Jujutsu Kaisen fan favorite hoodie with Gojo design', badge: ''},
-        {id:14,title:'Satoru Gojo Hoodie' ,price:650,cat:'hoodies',img:'products/hoodies/satoru_gojo.jpeg',description:'Another Gojo styled hoodie for the true fans', badge: ''},
-        {id:15,title:'Straw Hats Hoodie',price:650,cat:'hoodies',img:'products/hoodies/straw_hats.jpeg',description:'One Piece Straw Hats logo crew hoodie', badge: ''},
-        {id:16,title:'Ronaldo CR7 Hoodie',price:650,cat:'hoodies',img:'products/hoodies/ronaldo_cr7.jpeg',description:'Premium hoodie featuring Cristiano Ronaldo\'s iconic CR7 branding', badge: ''},
-        {id:17,title:'Ronaldo Real Madrid Hoodie',price:700,cat:'hoodies',img:'products/hoodies/cr7_rm.jpeg',description:'Official Real Madrid inspired hoodie celebrating Ronaldo\'s legacy', badge: 'Hot'},
-        {id:18,title:'Messi Hoodie',price:650,cat:'hoodies',img:'products/hoodies/messi.jpeg',description:'Stylish hoodie featuring Lionel Messi\'s signature style', badge: 'Exclusive'},
-        {id:19,title:'Drift Threads™ Mug',price:150,cat:'mugs',img:'products/mugs/driftthreads_mug.jpeg',description:'Your morning coffee just got a glow-up — Drift Threads™ approved', badge:'Official'},
-        {id:20,title:'Liquid Gold™ Honey (1kg)',price:220,cat:'supplements',img:'products/supplements/honey_1kg.jpeg',description:'The classic homemade honey, <strong>Liquid Gold™</strong> - a sub-brand of <strong>Drift Threads™</strong>', badge:'Limited'},
-        {id:21,title:'PRODUCT UNAVAILABLE',price:69,cat:'other',img:'products/other/unavail.jpeg',description:'PRODUCT UNAVAILABLE TEST FOR SERVER, IGNORE', badge: 'Test'},
+        {title:'Drift Threads™ Hoodie',price:700,cat:'hoodies',img:'products/hoodies/driftthreads_hoodie.jpeg',description:"Soft inside, durable outside, perfect for casual and streetwear", badge: 'Official'},
+        {title:'Tokyo Revengers Hoodie',price:650,cat:'hoodies',img:'products/hoodies/tokyo_revengers.jpeg',description:'Tokyo Revengers themed hoodie', badge: '20% Off'},
+        {title:'Kakashi Hoodie',price:650,cat:'hoodies',img:'products/hoodies/kakashi.jpeg',description:"Premium cotton-blend hoodie featuring Kakashi's fanart", badge: ''},
+        {title:'BMW Hoodie',price:650,cat:'hoodies',img:'products/hoodies/bmw.jpeg',description:'Classic "I need Money for BMW" hoodie', badge: ''},
+        {title:'911 GT3 RS Hoodie',price:650,cat:'hoodies',img:'products/hoodies/911_gt3_rs.jpeg',description:'Sleek hoodie with the Porsche 911 GT3 RS', badge: ''},
+        {title:'BMW M Hoodie',price:650,cat:'hoodies',img:'products/hoodies/bmw_m.jpeg',description:'Stylish BMW M series inspired hoodie', badge: ''},
+        {title:'Monkey D. Luffy Hoodie',price:650,cat:'hoodies',img:'products/hoodies/monkey_d_luffy.jpeg',description:'One Piece fan favorite hoodie with Luffy print', badge: ''},
+        {title:'Tokyo Ghoul Hoodie',price:650,cat:'hoodies',img:'products/hoodies/tokyo_ghoul.jpeg',description:'Dark and edgy Tokyo Ghoul themed hoodie', badge: ''},
+        {title:'Akatsuki Hoodie',price:750,cat:'hoodies',img:'products/hoodies/akatsuki.jpeg',description:'Iconic Akatsuki cloud design hoodie from Naruto', badge: ''},
+        {title:'COD Hoodie',price:650,cat:'hoodies',img:'products/hoodies/cod.jpeg',description:'Call of Duty inspired gaming hoodie', badge: ''},
+        {title:'One Piece Bros Hoodie',price:650,cat:'hoodies',img:'products/hoodies/one_piece_bros.jpeg',description:'Luffy, Ace & Sabo hoodie for all One Piece fans', badge: ''},
+        {title:'Batman Hoodie',price:650,cat:'hoodies',img:'products/hoodies/batman.jpeg',description:'Dark knight inspired Batman hoodie', badge: ''},
+        {title:'Gojo Hoodie',price:650,cat:'hoodies',img:'products/hoodies/gojo.jpeg',description:'Jujutsu Kaisen fan favorite hoodie with Gojo design', badge: ''},
+        {title:'Satoru Gojo Hoodie' ,price:650,cat:'hoodies',img:'products/hoodies/satoru_gojo.jpeg',description:'Another Gojo styled hoodie for the true fans', badge: ''},
+        {title:'Straw Hats Hoodie',price:650,cat:'hoodies',img:'products/hoodies/straw_hats.jpeg',description:'One Piece Straw Hats logo crew hoodie', badge: ''},
+        {title:'Ronaldo CR7 Hoodie',price:650,cat:'hoodies',img:'products/hoodies/ronaldo_cr7.jpeg',description:'Premium hoodie featuring Cristiano Ronaldo\'s iconic CR7 branding', badge: ''},
+        {title:'Ronaldo Real Madrid Hoodie',price:700,cat:'hoodies',img:'products/hoodies/cr7_rm.jpeg',description:'Official Real Madrid inspired hoodie celebrating Ronaldo\'s legacy', badge: 'Hot'},
+        {title:'Messi Hoodie',price:650,cat:'hoodies',img:'products/hoodies/messi.jpeg',description:'Stylish hoodie featuring Lionel Messi\'s signature style', badge: 'Exclusive'},
+        {title:'Drift Threads™ Mug',price:150,cat:'mugs',img:'products/mugs/driftthreads_mug.jpeg',description:'Your morning coffee just got a glow-up — Drift Threads™ approved', badge:'Official'},
+        {title:'Drift Threads™ Mug (White)',price:150,cat:'mugs',img:'products/mugs/driftthreads_mug_white.jpeg',description:'Your morning coffee just got a glow-up — Drift Threads™ approved', badge:'Official'},
+      
+        {title:'Liquid Gold™ Honey (1kg)',price:220,cat:'supplements',img:'products/supplements/honey_1kg.jpeg',description:'The classic homemade honey, <strong>Liquid Gold™</strong> - a sub-brand of <strong>Drift Threads™</strong>', badge:'Limited'},
+        {title:'PRODUCT UNAVAILABLE',price:69,cat:'other',img:'products/other/unavail.jpeg',description:'PRODUCT UNAVAILABLE TEST FOR SERVER, IGNORE', badge: 'Test'},
       ];
       
       const grid = document.getElementById('grid');
