@@ -131,16 +131,22 @@
   overflow-x: auto; /* Enable horizontal scrolling */
   white-space: nowrap; /* Prevent wrapping */
   margin-left: 30px; /* Maintain existing left margin */
-  /* background: linear-gradient(
-  to right,
-  rgba(0, 0, 0, 0) 80%,       
-  rgba(0, 0, 0, 0.8)70%,    
-  rgba(0, 0, 0, 1) 100%) ;    
-  padding-bottom: 10px; */
-;
+  position: relative;
+  padding-bottom: 10px;
 }
 
-
+/* subtle right edge fade to hint overflow (using pseudo element) */
+.cat-bar::after{
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 56px;
+  pointer-events: none;
+  background: linear-gradient(to left, rgba(10,10,10,0.6), rgba(10,10,10,0.0));
+  transition: opacity 200ms var(--ease);
+}
 
 /* Optional: fade arrow when scrolled fully to the right */
 .cat-bar.scrolled-end::after {
@@ -395,8 +401,6 @@
 
     <script>
 
-      
-
       // PRELOADER + APP INITIALIZATION
       // Preloader waits for window 'load' + minTime, then triggers first render (filterAndRender).
       // The preloader will only hide after the first batch finishes rendering (renderNextBatch resolves).
@@ -410,6 +414,8 @@
           // wait minimum time before starting rendering
           await new Promise(r => setTimeout(r, remaining));
           try {
+            // APPLY URL STATE BEFORE FIRST RENDER
+            applyStateFromURL(); // <-- sets search input and active category
             // Start rendering (filterAndRender returns a Promise resolved when first batch finished)
             await filterAndRender();
           } catch (e) {
@@ -470,7 +476,7 @@
       </div>
     </header>
 
-    <div class="cat-bar" role="tablist">
+    <div class="cat-bar" role="tablist" aria-label="Product categories">
       <button class="cat-btn active" data-cat="all" type="button">All</button>
       <button class="cat-btn" data-cat="hoodies" type="button">Hoodies</button>
       <button class="cat-btn" data-cat="mugs" type="button">Mugs</button>
@@ -511,8 +517,6 @@
  
 
     <script>
-
-      
 
       /* ========== DATA & REFS ========= */
       const products = [
@@ -585,10 +589,86 @@
         });
       }, { root: null, rootMargin: '300px', threshold: 0.1 });
       
-      /* ========== UTILS ========== */
+      /* ========== UTILS ========= */
       function money(n){return `R${n.toFixed(2)}`;}
       function saveCart(){localStorage.setItem('cart', JSON.stringify(cart));}
-      
+
+      /* ========== URL STATE HANDLING ========= */
+      // We keep both q (search) and cat (category) in the URL.
+      // updateURL({ q, cat }, { replace: false }) — pushes a new history entry (unless replace true).
+      function updateURL(state = {}, opts = { replace: false }) {
+        const params = new URLSearchParams(window.location.search);
+        if (state.q !== undefined && state.q !== null && String(state.q).trim() !== "") {
+          params.set('q', String(state.q).trim());
+        } else {
+          params.delete('q');
+        }
+        if (state.cat !== undefined && state.cat !== null && String(state.cat).trim() !== "" && String(state.cat).trim() !== 'all') {
+          params.set('cat', String(state.cat).trim());
+        } else {
+          params.delete('cat');
+        }
+        const newPath = window.location.pathname + (params.toString() ? `?${params.toString()}` : '');
+        if (opts.replace) {
+          history.replaceState({ q: state.q || '', cat: state.cat || '' }, '', newPath);
+        } else {
+          history.pushState({ q: state.q || '', cat: state.cat || '' }, '', newPath);
+        }
+      }
+
+      // Reads URL and returns { q, cat }
+      function readStateFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        const q = params.get('q') || '';
+        const cat = params.get('cat') || '';
+        return { q, cat };
+      }
+
+      // Apply URL state to UI (doesn't call render)
+      function applyStateToUI(state) {
+        // search
+        if (typeof state.q === 'string') {
+          searchInput.value = state.q;
+          clearBtn.style.display = state.q ? 'flex' : 'none';
+        }
+        // category: find matching button, else default to 'all'
+        const cat = (state.cat && state.cat.trim()) ? state.cat.trim() : 'all';
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        const match = document.querySelector(`.cat-btn[data-cat="${cat}"]`);
+        if (match) {
+          match.classList.add('active');
+          // ensure the selected button is visible (nice UX)
+          setTimeout(()=> match.scrollIntoView({ inline: 'center', behavior: 'smooth' }), 80);
+        } else {
+          // fallback to first/all
+          const first = document.querySelector('.cat-btn[data-cat="all"]') || document.querySelector('.cat-btn');
+          if(first) first.classList.add('active');
+        }
+      }
+
+      // Apply state from URL (used at initialization & on popstate)
+      function applyStateFromURL() {
+        const st = readStateFromURL();
+        applyStateToUI(st);
+      }
+
+      // Listen for browser back/forward
+      window.addEventListener('popstate', (e) => {
+        // When navigating history, read URL and re-render accordingly
+        applyStateFromURL();
+        // re-render (reset grid)
+        filterAndRender();
+      });
+
+      // Helper: debounce
+      function debounce(fn, wait=300){
+        let t;
+        return (...args) => {
+          clearTimeout(t);
+          t = setTimeout(()=> fn.apply(this, args), wait);
+        };
+      }
+
       /* ========== BACKGROUND INTERACTION BLOCKER & FOCUS TRAP ========= */
       (function(){
         function isInsideAny(target, list) {
@@ -938,6 +1018,8 @@
           return matchCat && matchQ;
         });
         currentIndex = 0; grid.innerHTML='';
+        // update URL to reflect this state (replace so initial load doesn't create duplicate)
+        updateURL({ q: searchInput.value.trim(), cat }, { replace: true });
         if(!filteredProducts.length){ grid.innerHTML = '<div class="empty-state">No products found</div>'; hideSpinner(); observer.disconnect(); return Promise.resolve(); }
         // render first batch and return its promise
         return renderNextBatch();
@@ -977,6 +1059,9 @@
 
         // ensure cart UI is synced
         updateCartDisplay();
+
+        // after initial render, set up a tiny observer to show/hide the right-edge fade (UX hint)
+        updateCatBarFade(); // initial
       });
 
       // dismiss nudge with Escape
@@ -993,16 +1078,47 @@
       });
       
       // search UI (clear button behavior)
-      searchInput.addEventListener('input', ()=>{ filterAndRender(); clearBtn.style.display = searchInput.value ? 'flex' : 'none'; });
+      searchInput.addEventListener('input', ()=>{ 
+        clearBtn.style.display = searchInput.value ? 'flex' : 'none';
+        // debounce search & url update
+        debouncedSearch();
+      });
+      const debouncedSearch = debounce(()=>{
+        // on search change, keep category as is but update URL and render
+        const cat = document.querySelector('.cat-btn.active').dataset.cat;
+        updateURL({ q: searchInput.value.trim(), cat }, { replace: false });
+        filterAndRender();
+      }, 320);
       searchBtn.addEventListener('click', ()=>{ filterAndRender(); searchInput.focus(); });
       clearBtn.addEventListener('click', ()=>{ searchInput.value=''; filterAndRender(); clearBtn.style.display='none'; searchInput.focus(); });
       
       // category buttons
       document.querySelectorAll('.cat-btn').forEach(btn=>{
-        btn.addEventListener('click', ()=>{ document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); filterAndRender() });
+        btn.addEventListener('click', ()=>{ 
+          document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active')); 
+          btn.classList.add('active'); 
+          const cat = btn.dataset.cat;
+          // update URL and render
+          updateURL({ q: searchInput.value.trim(), cat }, { replace: false });
+          filterAndRender();
+          // ensure UX arrow/fade updates
+          setTimeout(()=> updateCatBarFade(), 90);
+        });
         btn.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); btn.click(); }});
       });
-      
+
+      // update the right-edge fade depending on scroll position (if at right end, fade hidden)
+      const catBar = document.querySelector('.cat-bar');
+      function updateCatBarFade(){
+        if(!catBar) return;
+        const isEnd = Math.abs(catBar.scrollWidth - (catBar.scrollLeft + catBar.clientWidth)) < 2;
+        if(isEnd) catBar.classList.add('scrolled-end'); else catBar.classList.remove('scrolled-end');
+      }
+      if(catBar){
+        catBar.addEventListener('scroll', debounce(updateCatBarFade, 60), { passive: true });
+        window.addEventListener('resize', debounce(updateCatBarFade, 140));
+      }
+
       /* ========== CART MODAL OPEN/CLOSE ========== */
       function openCartModal(){
         cartModal.classList.add('active'); cartModal.setAttribute('aria-hidden','false');
@@ -1038,6 +1154,9 @@
         // Subtotal bolded using WhatsApp markdown (*bold*)
         const subtotal = money(cart.reduce((a,c)=>a + c.price*c.qty, 0));
         lines.push(`*Subtotal: ${subtotal}*`);
+        // include current page link for context
+        lines.push("");
+        lines.push(`Link: ${window.location.href}`);
         // join with line breaks and encode
         return encodeURIComponent(lines.join("\n"));
       }
