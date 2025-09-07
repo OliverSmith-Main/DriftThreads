@@ -171,6 +171,71 @@
     .contact{margin:32px 10px 0 10px;padding:18px;border-radius:var(--radius);border:1px solid var(--stroke);
       background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
     footer{margin:40px 20px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:14px;}
+
+
+
+
+    /* Price key (drop into your main stylesheet) */
+.price-key{
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.03);
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin: 14px 16px;
+  color: #eaf4ff;
+  box-shadow: 0 6px 20px rgba(2,6,12,0.6);
+  font-family: inherit;
+}
+
+/* Title */
+.price-key-title{
+  font-weight:700;
+  font-size:24px;
+  margin-bottom:16px;
+  color: var(--accent-2);
+  letter-spacing: 0.2px;
+}
+
+/* List */
+.price-key-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+
+/* Row */
+.pk-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  padding:8px;
+  border-radius:8px;
+  transition: background .12s ease;
+}
+.pk-row:hover{ background: rgba(255,255,255,0.01); }
+
+/* Left column (type + small description) */
+.pk-left{ flex:1; min-width:0; }
+.pk-type{ display:block; font-size:13px; color:#ffffff; }
+.pk-desc{ font-size:12px; color:#9fb6d1; margin:4px 0 8px 0; line-height:1.2; }
+
+/* Right column (price) */
+.pk-right{
+  white-space:nowrap;
+  font-weight:800;
+  font-size:13px;
+  color:#000;
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  padding:6px 10px;
+  border-radius:8px;
+  min-width:82px;
+  text-align:center;
+}
+
+/* Responsive: compact on small screens */
+@media (max-width:520px){
+  .price-key{ margin:10px 12px; padding:10px; }
+  .pk-row{ flex-direction:column; align-items:flex-start; gap:6px; }
+  .pk-right{ align-self:flex-end; min-width:60px; padding:5px 8px; }
+}
+
   </style>
 </head>
 <body class="bg-grid">
@@ -223,18 +288,99 @@
       </div>
     </section>
 
+    
+
     <!-- Products -->
     <section id="products">
       <h3>Featured -- Drop Highlights</h3>
       <div class="strip">
-        <div class="product"><div class="thumb"><img src="./home/products/hoodies/bmw.jpeg" alt="BMW Hoodie"></div><div class="meta">BMW Hoodie</div><div class="price">R650.00</div></div>
-        <div class="product"><div class="thumb"><img src="./home/products/hoodies/911_gt3_rs.jpeg" alt="911 GT3 RS Hoodie"></div><div class="meta">911 GT3 RS Hoodie</div><div class="price">R650.00</div></div>
-        <div class="product"><div class="thumb"><img src="./home/products/hoodies/cod.jpeg" alt="Ghost Ops Hoodie"></div><div class="meta">Ghost Ops Hoodie</div><div class="price">R650.00</div></div>
-        <div class="product"><div class="thumb"><img src="./home/products/hoodies/one_piece_bros.jpeg" alt="One Piece Hoodie"></div><div class="meta">One Piece Hoodie</div><div class="price">R650.00</div></div>
-        <div class="product"><div class="thumb"><img src="./home/products/hoodies/gojo.jpeg" alt="Gojo Hoodie"></div><div class="meta">Gojo Hoodie</div><div class="price">R650.00</div></div>
-        <div class="product"><div class="thumb"><img src="./home/products/supplements/honey_1kg.jpeg" alt="Honey jar"></div><div class="meta">Liquid Gold™ (1kg)</div><div class="price">R220.00</div></div>
-      </div>
+  <div class="product">
+    <div class="thumb">
+      <img src="./home/products/hoodies/driftthreads_hoodie.jpeg" alt="Drift Threads™ Hoodie">
+    </div>
+    <div class="meta">Drift Threads™ Hoodie</div>
+    <div class="price">R700.00</div>
+  </div>
+
+  <div class="product">
+    <div class="thumb">
+      <img src="./home/products/hoodies/tokyo_revengers.jpeg" alt="Tokyo Revengers Hoodie">
+    </div>
+    <div class="meta">Tokyo Revengers Hoodie</div>
+    <div class="price">R650.00</div>
+  </div>
+
+  <div class="product">
+    <div class="thumb">
+      <img src="./home/products/hoodies/911_gt3_rs.jpeg" alt="911 GT3 RS Hoodie">
+    </div>
+    <div class="meta">911 GT3 RS Hoodie</div>
+    <div class="price">R650.00</div>
+  </div>
+
+  <div class="product">
+    <div class="thumb">
+      <img src="./home/products/hoodies/cr7_rm.jpeg" alt="Ronaldo Real Madrid Hoodie">
+    </div>
+    <div class="meta">Ronaldo Real Madrid Hoodie</div>
+    <div class="price">R700.00</div>
+  </div>
+
+  <div class="product">
+    <div class="thumb">
+      <img src="./home/products/mugs/driftthreads_mug.jpeg" alt="Drift Threads™ Mug">
+    </div>
+    <div class="meta">Drift Threads™ Mug</div>
+    <div class="price">R150.00</div>
+  </div>
+
+  <div class="product">
+    <div class="thumb">
+      <img src="./home/products/supplements/honey_1kg.jpeg" alt="Liquid Gold™ Honey (1kg)">
+    </div>
+    <div class="meta">Liquid Gold™ Honey (1kg)</div>
+    <div class="price">R220.00</div>
+  </div>
+</div>
+
     </section>
+
+
+    <!-- Printing Price Guide -->
+     <br>
+     <br>
+
+<div class="price-key hidden" role="region" aria-label="Printing price guide">
+  <div class="price-key-title">Hoodie Price Guide (Subject to Change)</div>
+
+  <ul class="price-key-list">
+    <li class="pk-row">
+      <div class="pk-left">
+        <strong class="pk-type">Back print only</strong>
+        <div class="pk-desc">Large design on the back — great for full artwork or text.</div>
+      </div>
+      <div class="pk-right">R650</div>
+    </li>
+
+    <li class="pk-row">
+      <div class="pk-left">
+        <strong class="pk-type">Back + chest emblem</strong>
+        <div class="pk-desc">Back artwork plus a small logo/emblem on the front chest.</div>
+      </div>
+      <div class="pk-right">R700</div>
+    </li>
+
+    <li class="pk-row">
+      <div class="pk-left">
+        <strong class="pk-type">Back + sleeves</strong>
+        <div class="pk-desc">Back print with additional sleeve prints — price depends on sleeve coverage & complexity.</div>
+      </div>
+      <div class="pk-right">R750–R850</div>
+    </li>
+  </ul>
+</div>
+
+
 
     <!-- About -->
     <section id="about" class="split hidden">
